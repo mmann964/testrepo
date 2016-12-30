@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<data>
+    <browserType>1</browserType>   <!-- 1 = Chrome 2 = Firefox 3 = Safari -->
+    <url>https://beta.p2ux.com</url>
+    <uname>melissa</uname>
+    <passwordEnc>TWlrcm8yMDE2</passwordEnc>
+</data>
+
+
+<!-- To encode your password, do this:
+1.  Run python
+2.  import base64
+3.  base64.b64encode("<password>")
+-->
+
+
+<!--
+    <url>https://beta.p2ux.com</url>
+    <url>https://nextux.p2ux.com</url>
+-->
