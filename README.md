@@ -8,7 +8,7 @@ git push -u origin master
 
 Updating files on remote repo
 -----------------------------
-git commit -a
+git commit -a -m <comment>
 git push -u origin master
 
 Cloning new repo
