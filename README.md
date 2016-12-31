@@ -6,6 +6,11 @@ git add <filename>
 git commit -m <comment>
 git push -u origin master
 
+Updating files on remote repo
+-----------------------------
+git commit -a
+git push -u origin master
+
 Cloning new repo
 ----------------
 cd <workspace>
