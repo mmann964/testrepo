@@ -24,6 +24,26 @@ print "passwordEnc: " + passwordEnc
 passwordDec = base64.b64decode(passwordEnc)
 app_name = "SeleniumSmokeTest"
 
+def check_browser_errors(driver):
+    """
+    Checks browser for errors, returns a list of errors
+    :param driver:
+    :return:
+    """
+    try:
+        browserlogs = driver.get_log('browser')
+    except (ValueError, WebDriverException) as e:
+        # Some browsers does not support getting logs
+        LOGGER.debug("Could not get browser logs for driver %s due to exception: %s",
+                     driver, e)
+        return []
+
+    errors = []
+    for entry in browserlogs:
+        if entry['level'] == 'SEVERE':
+            errors.append(entry)
+    return errors
+
 
 class P2uxSmokeTest(unittest.TestCase):
     @classmethod
@@ -57,7 +77,7 @@ class P2uxSmokeTest(unittest.TestCase):
 
         assert login_page.is_title_matches(), "Login Screen title doesn't match."
         verStr = login_page.get_version()
-        print "Version = " + verStr
+        print "\nVersion = " + verStr
 
         login_page.login(uname, passwordDec)
         assert workspace_page.is_title_matches, "Not in Workspace Page after logging in."
@@ -91,41 +111,72 @@ class P2uxSmokeTest(unittest.TestCase):
         workspace_page = page.WorkspacePage(self.driver)
 
         verStr = login_page.get_version()
-        print "Version = " + verStr
+        print "\nVersion = " + verStr
         assert login_page.is_title_matches(), "Login Screen title doesn't match."
 
         login_page.login(uname, passwordDec)
         assert workspace_page.is_title_matches, "Not in Workspace Page after logging in."
 
-    @unittest.skip("skipping for now.")
-    def test_02_manage_options(self):
-        """Check that you can select each of the manage options from the top nav"""
-
-    @unittest.skip("skipping for now.")
-    def test_03_quick_search(self):
-        """Check that you can use quick search from the top nav"""
 
     #@unittest.skip("skipping for now.")
-    def test_04_start_new_app(self):
+    def test_02_start_new_app(self):
         """Check that you can create a new app"""
         workspace_page = page.WorkspacePage(self.driver)
         newapp_dialog = page.NewApplicationDialog(self.driver)
 
         workspace_page.click_add_app_tile()
         assert newapp_dialog.is_title_matches(), "Not in New Application dialog."
+
         newapp_dialog.createApp(app_name)
+        assert workspace_page.does_app_exist(app_name), True
 
-        #we need to check for the existence of the app tile
-        #assert workspace_page.does_app_exist(app_name), True
-        x = workspace_page.does_app_exist(app_name)
-        print x
-        time.sleep(2)
 
-        #delete the app for now -- remove/move this as we start to add tests
-        workspace_page.deleteApp(app_name)
+    #@unittest.skip("skipping for now.")
+    def test_03_manage_options(self):
+        """Check that you can select each of the manage options from the top nav"""
+        top_nav = page.TopNav(self.driver)
+        workspace_page = page.WorkspacePage(self.driver)
+        manage_fonts_dialog = page.ManageFontsDialog(self.driver)
+        manage_images_dialog = page.ManageImagesDialog(self.driver)
+        manage_colors_dialog = page.ManageColorsDialog(self.driver)
+
+        #fonts
+        top_nav.click_fonts_icon()
+        assert manage_fonts_dialog.is_title_matches(), "Not in Manage Fonts dialog"
+        manage_fonts_dialog.click_close_button()
+
+        #images
+        top_nav.click_images_icon()
+        assert manage_images_dialog.is_title_matches(), "Not in Manage Images dialog"
+        manage_images_dialog.click_close_button()
+
+        #colors -- need to have app selected
+        workspace_page.selectApp(app_name)
+        top_nav.click_colors_icon()
+        assert manage_colors_dialog.is_title_matches(), "Not in Manage Colors dialog"
+        manage_colors_dialog.click_close_button()
+
+
+    @unittest.skip("skipping for now.")
+    def test_04_quick_search(self):
+        """Check that you can use quick search from the top nav"""
+
+    def tearDown(self):
+        browserErrors = check_browser_errors(self.driver)
+
+        if browserErrors:
+            print "\n*****************************"
+            print self.id() + " browser errors:"
+            print browserErrors
+            print "*****************************"
+
 
     @classmethod
     def tearDownClass(cls):
+        workspace_page = page.WorkspacePage(cls.driver)
+        #delete the app for now -- remove/move this as we start to add tests
+        workspace_page.deleteApp(app_name)
+
         cls.driver.quit()
 
 

@@ -1,4 +1,6 @@
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -8,6 +10,9 @@ from locators import WorkspacePageLocators
 from locators import NewApplicationDialogLocators
 from locators import TopNavLocators
 from locators import DeleteItemsDialogLocator
+from locators import ManageColorsDialogLocators
+from locators import ManageFontsDialogLocators
+from locators import ManageImagesDialogLocators
 import time
 #import locators
 
@@ -34,10 +39,23 @@ class BasePage(object):
     def click_object(self, *locator):
         """clicks on object"""
         WebDriverWait(self.driver, 20).until(
-            lambda driver: self.driver.find_element(*locator)
+            #lambda driver: self.driver.find_element(*locator)
+            expected_conditions.element_to_be_clickable(tuple(locator))
         )
         element = self.driver.find_element(*locator)
-        element.click()
+        for x in range(0, 20):
+            try:
+                str_error = None
+                element.click()
+
+            except Exception as str_error:
+                pass
+
+            if str_error:
+                time.sleep(1)
+            else:
+                break
+        # element.click()
 
     def double_click_object(self, *locator):
         """double clicks object"""
@@ -145,6 +163,67 @@ class DeleteItemsDialog(BasePage):
     def click_no_button(self):
         self.click_object(*DeleteItemsDialogLocator.no_button)
 
+class ManageColorsDialog(BasePage):
+    expectedTitle = "Manage colors"
+    locatorClass = ManageColorsDialogLocators
+
+    def is_title_matches(self, locatorClass=locatorClass):
+        """ Verifies the title """
+        WebDriverWait(self.driver, 20).until(
+            lambda driver: self.driver.find_element(*locatorClass.title_bar)
+        )
+        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+
+    #close button
+    #done button
+    #colors button
+    #gradient button
+    #+ button
+    #individual color buttons
+    def click_close_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.close_button)
+
+    def click_done_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.done_button)
+
+class ManageFontsDialog(BasePage):
+    expectedTitle = "Manage Fonts"
+    locatorClass = ManageFontsDialogLocators
+
+    def is_title_matches(self, locatorClass=locatorClass):
+        """ Verifies the title """
+        WebDriverWait(self.driver, 20).until(
+            lambda driver: self.driver.find_element(*locatorClass.title_bar)
+        )
+        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+
+    #+ button
+    #individual font buttons
+    def click_close_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.close_button)
+
+    def click_done_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.done_button)
+
+class ManageImagesDialog(BasePage):
+    expectedTitle = "Manage Images"
+    locatorClass = ManageImagesDialogLocators
+
+    def is_title_matches(self, locatorClass=locatorClass):
+        """ Verifies the title """
+        WebDriverWait(self.driver, 20).until(
+            lambda driver: self.driver.find_element(*locatorClass.title_bar)
+        )
+        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+
+    #+ button
+    #individual font buttons
+    def click_close_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.close_button)
+
+    def click_ok_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.ok_button)
+
 class NewApplicationDialog(BasePage):
     """ New Application dialog action methods go here """
     expectedTitle = "New Application"
@@ -199,6 +278,15 @@ class TopNav(BasePage):
     """Top Navigation methods go here"""
     def click_MyApps_link(self):
         self.click_object(*TopNavLocators.MyApps_link)
+
+    def click_fonts_icon(self):
+        self.click_object(*TopNavLocators.fonts_icon)
+
+    def click_images_icon(self):
+        self.click_object(*TopNavLocators.images_icon)
+
+    def click_colors_icon(self):
+        self.click_object(*TopNavLocators.colors_icon)
 
     def logout(self):
         """Logs out"""
