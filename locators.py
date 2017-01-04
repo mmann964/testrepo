@@ -33,6 +33,7 @@ class TopNavLocators(object):
     colors_icon = (By.XPATH, '//*[@class="icon icon-Colors"]')
     fonts_icon = (By.XPATH, '//*[@class="icon icon-Fonts"]')
     images_icon = (By.XPATH, '//*[@class="icon icon-Images"]')
+    search_box = (By.XPATH, '//*[@title="Find"]')
     menu_dropdown = (By.XPATH, "//span[3]/bldr-user-dropdown")
     logout_menu = (By.XPATH, '//*[@id="item-template"][3]')
 

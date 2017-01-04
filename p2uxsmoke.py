@@ -131,7 +131,7 @@ class P2uxSmokeTest(unittest.TestCase):
         assert workspace_page.does_app_exist(app_name), True
 
 
-    #@unittest.skip("skipping for now.")
+    @unittest.skip("skipping for now.")
     def test_03_manage_options(self):
         """Check that you can select each of the manage options from the top nav"""
         top_nav = page.TopNav(self.driver)
@@ -157,9 +157,26 @@ class P2uxSmokeTest(unittest.TestCase):
         manage_colors_dialog.click_close_button()
 
 
-    @unittest.skip("skipping for now.")
+    #@unittest.skip("skipping for now.")
     def test_04_quick_search(self):
         """Check that you can use quick search from the top nav"""
+        top_nav = page.TopNav(self.driver)
+        workspace_page = page.WorkspacePage(self.driver)
+
+        #positive test -- should find the app
+        top_nav.search_field = app_name
+        assert workspace_page.does_app_exist(app_name), True
+        top_nav.search_field = ""
+
+        #negative test -- shouldn't find the test app
+        top_nav.search_field = "hello"
+        self.assertFalse(workspace_page.does_app_exist(app_name), app_name + "shouldn't be present")
+        #print workspace_page.does_app_exist(app_name)
+
+        #clear out the search filter
+        top_nav.search_field = ""
+
+
 
     def tearDown(self):
         browserErrors = check_browser_errors(self.driver)
@@ -174,6 +191,8 @@ class P2uxSmokeTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         workspace_page = page.WorkspacePage(cls.driver)
+        top_nav = page.TopNav(cls.driver)
+        top_nav.search_field = ""
         #delete the app for now -- remove/move this as we start to add tests
         workspace_page.deleteApp(app_name)
 

@@ -9,7 +9,10 @@ class BasePageElement(object):
         driver = obj.driver
         WebDriverWait(driver, 100).until(
             lambda driver: driver.find_element(*self.locator))
-        driver.find_element(*self.locator).send_keys(value)
+        if value == "":
+            driver.find_element(*self.locator).clear()
+        else:
+            driver.find_element(*self.locator).send_keys(value)
 
     def __get__(self, obj, owner):
         """Gets the text of the specified object"""

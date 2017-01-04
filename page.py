@@ -39,8 +39,7 @@ class BasePage(object):
     def click_object(self, *locator):
         """clicks on object"""
         WebDriverWait(self.driver, 20).until(
-            #lambda driver: self.driver.find_element(*locator)
-            expected_conditions.element_to_be_clickable(tuple(locator))
+            lambda driver: self.driver.find_element(*locator)
         )
         element = self.driver.find_element(*locator)
         for x in range(0, 20):
@@ -55,7 +54,6 @@ class BasePage(object):
                 time.sleep(1)
             else:
                 break
-        # element.click()
 
     def double_click_object(self, *locator):
         """double clicks object"""
@@ -276,6 +274,8 @@ class NewApplicationDialog(BasePage):
 
 class TopNav(BasePage):
     """Top Navigation methods go here"""
+    search_field = TextElement(*TopNavLocators.search_box)
+
     def click_MyApps_link(self):
         self.click_object(*TopNavLocators.MyApps_link)
 
