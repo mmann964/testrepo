@@ -3,6 +3,8 @@ import unittest
 import base64
 import xml.etree.ElementTree as ET
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
+import logging
 import page
 
 # to run, type one of these commands at the bash prompt:
@@ -34,7 +36,7 @@ def check_browser_errors(driver):
         browserlogs = driver.get_log('browser')
     except (ValueError, WebDriverException) as e:
         # Some browsers does not support getting logs
-        LOGGER.debug("Could not get browser logs for driver %s due to exception: %s",
+        logging.debug("Could not get browser logs for driver %s due to exception: %s",
                      driver, e)
         return []
 
