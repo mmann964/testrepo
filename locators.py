@@ -22,6 +22,12 @@ class WorkspacePageLocators(object):
         # App tile -- assign name dynamically
         self.app_tile = (By.XPATH, '//*[@title="' + app_name + '"]')
 
+class AppEditorPageLocators(object):
+    """A class for App Editor page locators."""
+    def __init__(self, screen_name):
+        # Screen tile -- assign name dynamically
+        self.screen_tile = (By.XPATH, '//*[@title="' + screen_name + '"]')
+
 class NewApplicationDialogLocators(DialogLocators):
     """A class for New Application dialog locators"""
     done_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')

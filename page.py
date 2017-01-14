@@ -18,6 +18,7 @@ from locators import LeftNavLocators
 from locators import NewScreenDialogLocators
 from locators import NewPanelDialogLocators
 from locators import DeleteScreensDialogLocators
+from locators import AppEditorPageLocators
 import time
 #import locators
 
@@ -70,6 +71,33 @@ class BasePage(object):
         element = self.driver.find_element(*locator)
         actionChains = ActionChains(self.driver)
         actionChains.double_click(element).perform()
+
+
+class BaseDialogRetarded(BasePage):
+    """Bass class to initialize basic dialog functionality"""
+
+    def __init__(self, locatorClass, expectedTitle, driver):
+        super(BaseDialog, self).__init__(driver)
+        self.locatorClass = locatorClass
+        self.expectedTitle = expectedTitle
+
+    def is_title_matches(self, locatorClass, expectedTitle):
+        """ Verifies the title """
+        WebDriverWait(self.driver, 20).until(
+            lambda driver: self.driver.find_element(*locatorClass.title_bar)
+        )
+        return expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+
+    def click_close_button(self, locatorClass):
+        self.click_object(*locatorClass.close_button)
+
+    def click_cancel_button(self, locatorClass):
+        self.click_object(*locatorClass.cancel_button)
+
+    def click_ok_button(self, locatorClass):
+        self.click_object(*locatorClass.ok_button)
+
+
 
 class BaseDialog(BasePage):
     """Bass class to initialize basic dialog functionality"""
@@ -126,7 +154,7 @@ class WorkspacePage(BasePage):
     expectedTitle = "P2UX Builder"
 
     def is_title_matches(self):
-        """Verifies that the hardcoded text P2UX Builder appears in page title"""
+        """Verifies the page title"""
         return self.expectedTitle in self.driver.title
 
     def click_add_app_tile(self):
@@ -351,38 +379,7 @@ class NewScreenDialog(BaseDialog):
         #time.sleep(2)
         self.click_ok_button(self.locatorClass)
 
-class NewScreenDialogOld(BasePage):
-    """ New Screen dialog action methods go here """
-    expectedTitle = "New Screen"
-    locatorClass = NewScreenDialogLocators
-
-    #fields with user input
-    screenname_field = TextElement(*locatorClass.name_field)
-
-    def is_title_matches(self, locatorClass=locatorClass):
-        """ Verifies the title """
-        WebDriverWait(self.driver, 20).until(
-            lambda driver: self.driver.find_element(*locatorClass.title_bar)
-        )
-        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
-
-
-    def click_close_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.close_button)
-
-    def click_cancel_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.cancel_button)
-
-    def click_ok_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.ok_button)
-
-    def createScreen(self, screen_name):
-        """ Creates an app with the given name"""
-        self.screenname_field = screen_name
-        #time.sleep(2)
-        self.click_ok_button()
-
-class NewPanelDialog(BasePage):
+class NewPanelDialog(BaseDialog):
     """ New Panel dialog action methods go here """
     expectedTitle = "New Panel"
     locatorClass = NewPanelDialogLocators
@@ -391,23 +388,6 @@ class NewPanelDialog(BasePage):
     panelname_field = TextElement(*locatorClass.name_field)
     width_field = TextElement(*locatorClass.width_field)
     height_field = TextElement(*locatorClass.height_field)
-
-    def is_title_matches(self, locatorClass=locatorClass):
-        """ Verifies the title """
-        WebDriverWait(self.driver, 20).until(
-            lambda driver: self.driver.find_element(*locatorClass.title_bar)
-        )
-        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
-
-
-    def click_close_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.close_button)
-
-    def click_cancel_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.cancel_button)
-
-    def click_ok_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.ok_button)
 
     def createPanel(self, panel_name, width = 100, height = 100):
         """ Creates an app with the given name"""
@@ -421,24 +401,42 @@ class NewPanelDialog(BasePage):
         #time.sleep(2)
         self.click_ok_button()
 
-class DeleteScreensDialog(BasePage):
+class DeleteScreensDialog(BaseDialog):
     """ Delete Screens dialog action methods go here """
     expectedTitle = "Delete Screens"
     locatorClass = DeleteScreensDialogLocators
 
-    def is_title_matches(self, locatorClass=locatorClass):
-        """ Verifies the title """
-        WebDriverWait(self.driver, 20).until(
-            lambda driver: self.driver.find_element(*locatorClass.title_bar)
-        )
-        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+class AppEditorPage(BasePage):
+    """ Workspace page action methods go here"""
+    expectedTitle = "P2UX Builder"
 
+    def is_title_matches(self):
+        """Verifies the page title"""
+        return self.expectedTitle in self.driver.title
 
-    def click_close_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.close_button)
+    def openScreen(self, screen_name):
+        """Double clicks on app with given name"""
+        locatorStr = ('//*[@title="' + screen_name + '"]')
+        self.double_click_object(By.XPATH, locatorStr)
 
-    def click_cancel_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.cancel_button)
+    def selectScreen(self, screen_name):
+        """Clicks on app with given name"""
+        time.sleep(2)  #this is a hack.  Otherwise it won't find the app consistently.  Need to double-check implicit/explicit waits
+        #locatorStr = ('//*[@title="' + app_name + '"]')
+        #self.click_object(By.XPATH, locatorStr)
+        screen_tile = AppEditorPageLocators(screen_name)
+        self.click_object(*screen_tile.screen_tile)
 
-    def click_ok_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.ok_button)
+    def deleteScreen(self, screen_name):
+        """Deletes screen with given name"""
+        delete_screens_dialog = DeleteScreensDialog(self.driver)
+        self.selectScreen(screen_name)
+        self.click_object(*TopNavLocators.delete_icon)
+
+    def does_screen_exist(self, screen_name):
+        """Returns true if screen tile exists, false if it doesn't"""
+        locatorStr = ('//*[@title="' + screen_name + '"]')
+        if self.check_object_exists(By.XPATH, locatorStr):
+            return True
+        else:
+            return False

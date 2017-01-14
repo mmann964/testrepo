@@ -26,6 +26,8 @@ print "uname: " + uname
 print "passwordEnc: " + passwordEnc
 passwordDec = base64.b64decode(passwordEnc)
 app_name = "SeleniumSmokeTest"
+screen_name = "SeleniumTestScreen"
+panel_name = "SeleniumTestPanel"
 
 def check_browser_errors(driver):
     """
@@ -190,13 +192,20 @@ class P2uxSmokeTest(unittest.TestCase):
         """Check that you can open an app and create a new screen"""
         top_nav = page.TopNav(self.driver)
         workspace_page = page.WorkspacePage(self.driver)
-        workspace_page.openApp(app_name)
         newscreen_dialog = page.NewScreenDialog(self.driver)
         left_nav = page.LeftNav(self.driver)
-        left_nav.click_new_screen()
-        newscreen_dialog.createScreen("MelScreen")
-        top_nav.click_MyApps_link()
+        app_editor = page.AppEditorPage(self.driver)
 
+        workspace_page.openApp(app_name)
+        left_nav.click_new_screen()
+        newscreen_dialog.is_title_matches(newscreen_dialog.locatorClass, newscreen_dialog.expectedTitle), "New Screen title doesn't match."
+        newscreen_dialog.createScreen(screen_name)
+
+        top_nav.click_MyApps_link()
+        workspace_page.openApp(app_name)
+        assert app_editor.does_screen_exist(screen_name), True
+
+        top_nav.click_MyApps_link()
 
     def tearDown(self):
         browserErrors = check_browser_errors(self.driver)
