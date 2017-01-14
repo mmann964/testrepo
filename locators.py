@@ -1,5 +1,12 @@
 from selenium.webdriver.common.by import By
 
+class DialogLocators(object):
+    """A generic class for dialog locators"""
+    title_bar = (By.XPATH, '//*[@class="dialog__title-text ng-binding"]')
+    close_button = (By.XPATH, '//*[@class="icon icon-Cancel"]')
+    ok_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
+    cancel_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope')
+
 class LoginPageLocators(object):
     """A class for login page locators."""
     uname_field = (By.ID, 'login-username')
@@ -7,24 +14,25 @@ class LoginPageLocators(object):
     signin_button = (By.XPATH, "//input[@value='Sign In']")
     version_ctrl = (By.ID, "login__version")
 
-#<input type="submit" value="Sign In" class="login-form__submit btn--submit">
-
 class WorkspacePageLocators(object):
     """A class for Workspace page locators."""
-    add_app_tile = (By.XPATH, "//div[@ng-if='vm.addButton']")  # Tile with + to add an app
+    add_app_tile = (By.XPATH, "//*[@ng-if='vm.addButton']")  # Tile with + to add an app
 
     def __init__(self, app_name):
         # App tile -- assign name dynamically
         self.app_tile = (By.XPATH, '//*[@title="' + app_name + '"]')
 
-class NewApplicationDialogLocators(object):
+class NewApplicationDialogLocators(DialogLocators):
     """A class for New Application dialog locators"""
-    title_bar = (By.XPATH, '//*[@class="dialog__title-text ng-binding"]')
-    close_button = (By.XPATH, '//*[@class="icon icon-Cancel"]')
-    cancel_button = (By.XPATH, '*[@class="btn--dialog ng-binding ng-scope"]')
     done_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
     next_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
     name_field = (By.ID, 'newapp-name')
+
+class LeftNavLocators(object):
+    """A class for Left Navigation locators"""
+    New_Screen = (By.XPATH, '//*[@ng-click="vm.addScreen()"]')
+    New_Panel = (By.XPATH, '//*[@ng-click="vm.addPanel()"]')
+
 
 class TopNavLocators(object):
     """A class for Top Navigation locators"""
@@ -37,33 +45,38 @@ class TopNavLocators(object):
     menu_dropdown = (By.XPATH, "//span[3]/bldr-user-dropdown")
     logout_menu = (By.XPATH, '//*[@id="item-template"][3]')
 
-    #logout_menu = (By.XPATH, "//li[@id='item-template'])[9]")
 
-class DeleteItemsDialogLocator(object):
+class DeleteItemsDialogLocator(DialogLocators):
     """A class for Delete Items dialog locators"""
-    title_bar = (By.XPATH, '//*[@class="dialog__title-text ng-binding"]')
     yes_button = (By.XPATH, '//*[@class="btn--dialog ng-binding ng-scope ok"]')
     no_button = (By.XPATH, '//*[@class="btn--dialog ng-binding ng-scope"]')
 
-class ManageColorsDialogLocators(object):
+class ManageColorsDialogLocators(DialogLocators):
     """A class for Manage Colors dialog locators"""
-    title_bar = (By.XPATH, '//*[@class="dialog__title-text ng-binding"]')
     # Still need Color, Gradient, +, Individual colors buttons
-    close_button = (By.XPATH, '//*[@class="icon icon-Cancel"]')
     done_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
 
-class ManageFontsDialogLocators(object):
+class ManageFontsDialogLocators(DialogLocators):
     """A class for Manage Fonts dialog locators"""
-    title_bar = (By.XPATH, '//*[@class="dialog__title-text ng-binding"]')
     # Still need +, Individual font delete buttons
-    close_button = (By.XPATH, '//*[@class="icon icon-Cancel"]')
 
-class ManageImagesDialogLocators(object):
+class ManageImagesDialogLocators(DialogLocators):
     """A class for Manage Images dialog locators"""
-    title_bar = (By.XPATH, '//*[@class="dialog__title-text ng-binding"]')
     # Still need Search, Filters, +, View, Delete, Individual images buttons
-    close_button = (By.XPATH, '//*[@class="icon icon-Cancel"]')
-    ok_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
+
+class NewScreenDialogLocators(DialogLocators):
+    """A class for the New Screen dialog locators"""
+    name_field = (By.XPATH, '//*[@title="Screen Name"]')
+
+class NewPanelDialogLocators(DialogLocators):
+    """A class for the New Panel dialog locators"""
+    name_field = (By.XPATH, '//*[@title="Panel Name"]')
+    width_field = (By.XPATH, '//*[@title="Width"]')
+    height_field = (By.XPATH, '//*[@title="Height"]')
+
+class DeleteScreensDialogLocators(DialogLocators):
+    """A class for the Delete Screens dialog locators"""
+
 
 
 

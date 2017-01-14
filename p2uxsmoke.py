@@ -4,6 +4,7 @@ import base64
 import xml.etree.ElementTree as ET
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.keys import Keys
 import logging
 import page
 
@@ -61,11 +62,17 @@ class P2uxSmokeTest(unittest.TestCase):
         elif browserType == "3":
             print "Browser = Safari"
             cls.driver = webdriver.Safari()
+            # cls.driver.maximize_window()
         else:
             print "Invalid entry for browser.  Exiting."
             exit()
         cls.driver.implicitly_wait(3)
         cls.driver.get(url)
+
+    def setUp(self):
+        # hack -- waiting allows Safari to load the javascript so we can do a click
+        if browserType == "3":
+            time.sleep(.5)
 
     @unittest.skip("skipping for now.")
     def test_00_misc(self):
@@ -133,7 +140,7 @@ class P2uxSmokeTest(unittest.TestCase):
         assert workspace_page.does_app_exist(app_name), True
 
 
-    @unittest.skip("skipping for now.")
+    #@unittest.skip("skipping for now.")
     def test_03_manage_options(self):
         """Check that you can select each of the manage options from the top nav"""
         top_nav = page.TopNav(self.driver)
@@ -173,11 +180,22 @@ class P2uxSmokeTest(unittest.TestCase):
         #negative test -- shouldn't find the test app
         top_nav.search_field = "hello"
         self.assertFalse(workspace_page.does_app_exist(app_name), app_name + "shouldn't be present")
-        #print workspace_page.does_app_exist(app_name)
 
         #clear out the search filter
         top_nav.search_field = ""
+        self.driver.refresh()
 
+    # @unittest.skip("skipping for now.")
+    def test_05_create_screen(self):
+        """Check that you can open an app and create a new screen"""
+        top_nav = page.TopNav(self.driver)
+        workspace_page = page.WorkspacePage(self.driver)
+        workspace_page.openApp(app_name)
+        newscreen_dialog = page.NewScreenDialog(self.driver)
+        left_nav = page.LeftNav(self.driver)
+        left_nav.click_new_screen()
+        newscreen_dialog.createScreen("MelScreen")
+        top_nav.click_MyApps_link()
 
 
     def tearDown(self):
@@ -192,9 +210,18 @@ class P2uxSmokeTest(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        if browserType == "3":
+            time.sleep(.5)
         workspace_page = page.WorkspacePage(cls.driver)
-        top_nav = page.TopNav(cls.driver)
-        top_nav.search_field = ""
+        #top_nav = page.TopNav(cls.driver)
+        #top_nav.search_field = ""
+        #cls.driver.refresh()
+        #if browserType == "3":
+        #    time.sleep(5)
+        #    workspace_page = page.WorkspacePage(cls.driver)
+        #    top_nav = page.TopNav(cls.driver)
+
+
         #delete the app for now -- remove/move this as we start to add tests
         workspace_page.deleteApp(app_name)
 

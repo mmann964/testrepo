@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from element import BasePageElement
 from locators import LoginPageLocators
 from locators import WorkspacePageLocators
@@ -13,6 +14,10 @@ from locators import DeleteItemsDialogLocator
 from locators import ManageColorsDialogLocators
 from locators import ManageFontsDialogLocators
 from locators import ManageImagesDialogLocators
+from locators import LeftNavLocators
+from locators import NewScreenDialogLocators
+from locators import NewPanelDialogLocators
+from locators import DeleteScreensDialogLocators
 import time
 #import locators
 
@@ -46,6 +51,8 @@ class BasePage(object):
             try:
                 str_error = None
                 element.click()
+                #self.driver.execute_script("element[0].click()")  #Nope.  Slow.  And doesn't seem to work.
+                #element.send_keys(Keys.RETURN)  #Nope.  Doesn't work and causes Safari to think something interfered manually with the browser
 
             except Exception as str_error:
                 pass
@@ -63,6 +70,25 @@ class BasePage(object):
         element = self.driver.find_element(*locator)
         actionChains = ActionChains(self.driver)
         actionChains.double_click(element).perform()
+
+class BaseDialog(BasePage):
+    """Bass class to initialize basic dialog functionality"""
+
+    def is_title_matches(self, locatorClass, expectedTitle):
+        """ Verifies the title """
+        WebDriverWait(self.driver, 20).until(
+            lambda driver: self.driver.find_element(*locatorClass.title_bar)
+        )
+        return expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+
+    def click_close_button(self, locatorClass):
+        self.click_object(*locatorClass.close_button)
+
+    def click_cancel_button(self, locatorClass):
+        self.click_object(*locatorClass.cancel_button)
+
+    def click_ok_button(self, locatorClass):
+        self.click_object(*locatorClass.ok_button)
 
 class LoginPage(BasePage):
     """ Login page action methods go here"""
@@ -300,4 +326,119 @@ class TopNav(BasePage):
         #)
         self.click_object(*TopNavLocators.logout_menu)
 
+class LeftNav(BasePage):
+    """Left Navigation methods go here"""
+    locatorClass = LeftNavLocators
 
+    def click_new_screen(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.New_Screen)
+
+    def click_new_panel(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.New_Panel)
+
+
+class NewScreenDialog(BaseDialog):
+    """New Screen dialog action methods go here"""
+    expectedTitle = "New Screen"
+    locatorClass = NewScreenDialogLocators
+
+    #fields with user input
+    screenname_field = TextElement(*locatorClass.name_field)
+
+    def createScreen(self, screen_name):
+        """ Creates an app with the given name"""
+        self.screenname_field = screen_name
+        #time.sleep(2)
+        self.click_ok_button(self.locatorClass)
+
+class NewScreenDialogOld(BasePage):
+    """ New Screen dialog action methods go here """
+    expectedTitle = "New Screen"
+    locatorClass = NewScreenDialogLocators
+
+    #fields with user input
+    screenname_field = TextElement(*locatorClass.name_field)
+
+    def is_title_matches(self, locatorClass=locatorClass):
+        """ Verifies the title """
+        WebDriverWait(self.driver, 20).until(
+            lambda driver: self.driver.find_element(*locatorClass.title_bar)
+        )
+        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+
+
+    def click_close_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.close_button)
+
+    def click_cancel_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.cancel_button)
+
+    def click_ok_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.ok_button)
+
+    def createScreen(self, screen_name):
+        """ Creates an app with the given name"""
+        self.screenname_field = screen_name
+        #time.sleep(2)
+        self.click_ok_button()
+
+class NewPanelDialog(BasePage):
+    """ New Panel dialog action methods go here """
+    expectedTitle = "New Panel"
+    locatorClass = NewPanelDialogLocators
+
+    #fields with user input
+    panelname_field = TextElement(*locatorClass.name_field)
+    width_field = TextElement(*locatorClass.width_field)
+    height_field = TextElement(*locatorClass.height_field)
+
+    def is_title_matches(self, locatorClass=locatorClass):
+        """ Verifies the title """
+        WebDriverWait(self.driver, 20).until(
+            lambda driver: self.driver.find_element(*locatorClass.title_bar)
+        )
+        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+
+
+    def click_close_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.close_button)
+
+    def click_cancel_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.cancel_button)
+
+    def click_ok_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.ok_button)
+
+    def createPanel(self, panel_name, width = 100, height = 100):
+        """ Creates an app with the given name"""
+        self.panelname_field = panel_name
+        if width != 100:
+            self.width_field = ""
+            self.width_field = width
+        if height != 100:
+            self.height_field = ""
+            self.height_field = height
+        #time.sleep(2)
+        self.click_ok_button()
+
+class DeleteScreensDialog(BasePage):
+    """ Delete Screens dialog action methods go here """
+    expectedTitle = "Delete Screens"
+    locatorClass = DeleteScreensDialogLocators
+
+    def is_title_matches(self, locatorClass=locatorClass):
+        """ Verifies the title """
+        WebDriverWait(self.driver, 20).until(
+            lambda driver: self.driver.find_element(*locatorClass.title_bar)
+        )
+        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+
+
+    def click_close_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.close_button)
+
+    def click_cancel_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.cancel_button)
+
+    def click_ok_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.ok_button)
