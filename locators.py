@@ -4,8 +4,11 @@ class DialogLocators(object):
     """A generic class for dialog locators"""
     title_bar = (By.XPATH, '//*[@class="dialog__title-text ng-binding"]')
     close_button = (By.XPATH, '//*[@class="icon icon-Cancel"]')
-    ok_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
-    cancel_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope')
+    ok_button = (By.CSS_SELECTOR, 'button.btn--dialog.ok')
+    cancel_button = (By.CSS_SELECTOR, 'button.btn--dialog')
+
+    #ok_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
+    #cancel_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope')
 
 class LoginPageLocators(object):
     """A class for login page locators."""
@@ -30,8 +33,10 @@ class AppEditorPageLocators(object):
 
 class NewApplicationDialogLocators(DialogLocators):
     """A class for New Application dialog locators"""
-    done_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
-    next_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
+    #done_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
+    #next_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
+    done_button = DialogLocators.ok_button
+    next_button = DialogLocators.ok_button
     name_field = (By.ID, 'newapp-name')
 
 class LeftNavLocators(object):
@@ -54,8 +59,10 @@ class TopNavLocators(object):
 
 class DeleteItemsDialogLocator(DialogLocators):
     """A class for Delete Items dialog locators"""
-    yes_button = (By.XPATH, '//*[@class="btn--dialog ng-binding ng-scope ok"]')
-    no_button = (By.XPATH, '//*[@class="btn--dialog ng-binding ng-scope"]')
+    #yes_button = (By.XPATH, '//*[@class="btn--dialog ng-binding ng-scope ok"]')
+    #no_button = (By.XPATH, '//*[@class="btn--dialog ng-binding ng-scope"]')
+    yes_button = DialogLocators.ok_button
+    no_button = DialogLocators.cancel_button
 
 class ManageColorsDialogLocators(DialogLocators):
     """A class for Manage Colors dialog locators"""

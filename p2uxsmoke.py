@@ -9,7 +9,7 @@ import logging
 import page
 
 # to run, type one of these commands at the bash prompt:
-# python p2uxlogin.py
+# python p2uxsmoke.py
 # nosetests --nocapture p2uxlogin.py
 # nosetests --verbosity=3 --nocapture p2uxlogin.py
 
@@ -215,6 +215,7 @@ class P2uxSmokeTest(unittest.TestCase):
             print self.id() + " browser errors:"
             print browserErrors
             print "*****************************"
+            self.fail("Browser Errors reported")
 
 
     @classmethod
