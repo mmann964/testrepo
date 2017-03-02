@@ -139,7 +139,7 @@ class P2uxSmokeTest(unittest.TestCase):
         assert newapp_dialog.is_title_matches(), "Not in New Application dialog."
 
         newapp_dialog.createApp(app_name)
-        assert workspace_page.does_app_exist(app_name), True
+        assert workspace_page.does_app_exist(app_name), "App: " + app_name + " wasn't created."
 
 
     #@unittest.skip("skipping for now.")
@@ -176,12 +176,12 @@ class P2uxSmokeTest(unittest.TestCase):
 
         #positive test -- should find the app
         top_nav.search_field = app_name
-        assert workspace_page.does_app_exist(app_name), True
+        assert workspace_page.does_app_exist(app_name), "App: " + app_name + " isn't shown."
         top_nav.search_field = ""
 
         #negative test -- shouldn't find the test app
         top_nav.search_field = "hello"
-        self.assertFalse(workspace_page.does_app_exist(app_name), app_name + "shouldn't be present")
+        self.assertFalse(workspace_page.does_app_exist(app_name), app_name + " shouldn't be present")
 
         #clear out the search filter
         top_nav.search_field = ""
@@ -203,11 +203,12 @@ class P2uxSmokeTest(unittest.TestCase):
 
         top_nav.click_MyApps_link()
         workspace_page.openApp(app_name)
-        assert app_editor.does_screen_exist(screen_name), True
+        assert app_editor.does_screen_exist(screen_name), "Screen: " + screen_name + " wasn't created."
 
         top_nav.click_MyApps_link()
 
     def tearDown(self):
+        time.sleep(2)  # without this, it may attribute the browser error to the wrong test case
         browserErrors = check_browser_errors(self.driver)
 
         if browserErrors:
@@ -215,7 +216,7 @@ class P2uxSmokeTest(unittest.TestCase):
             print self.id() + " browser errors:"
             print browserErrors
             print "*****************************"
-            self.fail("Browser Errors reported")
+            self.fail("Browser Errors reported in " + self.id())
 
 
     @classmethod

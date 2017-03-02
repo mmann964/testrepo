@@ -7,9 +7,6 @@ class DialogLocators(object):
     ok_button = (By.CSS_SELECTOR, 'button.btn--dialog.ok')
     cancel_button = (By.CSS_SELECTOR, 'button.btn--dialog')
 
-    #ok_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
-    #cancel_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope')
-
 class LoginPageLocators(object):
     """A class for login page locators."""
     uname_field = (By.ID, 'login-username')
@@ -29,12 +26,11 @@ class AppEditorPageLocators(object):
     """A class for App Editor page locators."""
     def __init__(self, screen_name):
         # Screen tile -- assign name dynamically
-        self.screen_tile = (By.XPATH, '//*[@title="' + screen_name + '"]')
+        #self.screen_tile = (By.XPATH, '//*[@title="' + screen_name + '"]')
+        self.screen_tile = (By.XPATH, '//*[@title="' + screen_name + '"]/..//*[@class="screen-card__img"]')
 
 class NewApplicationDialogLocators(DialogLocators):
     """A class for New Application dialog locators"""
-    #done_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
-    #next_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
     done_button = DialogLocators.ok_button
     next_button = DialogLocators.ok_button
     name_field = (By.ID, 'newapp-name')
@@ -59,8 +55,6 @@ class TopNavLocators(object):
 
 class DeleteItemsDialogLocator(DialogLocators):
     """A class for Delete Items dialog locators"""
-    #yes_button = (By.XPATH, '//*[@class="btn--dialog ng-binding ng-scope ok"]')
-    #no_button = (By.XPATH, '//*[@class="btn--dialog ng-binding ng-scope"]')
     yes_button = DialogLocators.ok_button
     no_button = DialogLocators.cancel_button
 

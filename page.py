@@ -72,6 +72,15 @@ class BasePage(object):
         actionChains = ActionChains(self.driver)
         actionChains.double_click(element).perform()
 
+    def click_object_at_location(self, xoffset, yoffset, *locator):
+        """clicks object at x, y offset"""
+        WebDriverWait(self.driver, 20).until(
+            lambda driver: self.driver.find_element(*locator)
+        )
+        element = self.driver.find_element(*locator)
+        actionChains = ActionChains(self.driver)
+        actionChains.move_to_element_with_offset(element, xoffset, yoffset).click().perform()
+
 
 class BaseDialogRetarded(BasePage):
     """Bass class to initialize basic dialog functionality"""
@@ -425,13 +434,17 @@ class AppEditorPage(BasePage):
         #locatorStr = ('//*[@title="' + app_name + '"]')
         #self.click_object(By.XPATH, locatorStr)
         screen_tile = AppEditorPageLocators(screen_name)
-        self.click_object(*screen_tile.screen_tile)
+        #self.click_object(*screen_tile.screen_tile)  # clicking the tile opens the screen.  Maybe it's clicking in the center?
+        self.click_object_at_location(1, 1, *screen_tile.screen_tile)
 
     def deleteScreen(self, screen_name):
         """Deletes screen with given name"""
         delete_screens_dialog = DeleteScreensDialog(self.driver)
         self.selectScreen(screen_name)
         self.click_object(*TopNavLocators.delete_icon)
+        time.sleep(1)
+        delete_screens_dialog.click_ok_button(delete_screens_dialog.locatorClass)
+        time.sleep(1)
 
     def does_screen_exist(self, screen_name):
         """Returns true if screen tile exists, false if it doesn't"""
