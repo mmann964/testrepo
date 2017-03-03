@@ -14,6 +14,7 @@ from locators import DeleteItemsDialogLocator
 from locators import ManageColorsDialogLocators
 from locators import ManageFontsDialogLocators
 from locators import ManageImagesDialogLocators
+from locators import ManageStylesDialogLocators
 from locators import LeftNavLocators
 from locators import NewScreenDialogLocators
 from locators import NewPanelDialogLocators
@@ -82,49 +83,27 @@ class BasePage(object):
         actionChains.move_to_element_with_offset(element, xoffset, yoffset).click().perform()
 
 
-class BaseDialogRetarded(BasePage):
-    """Bass class to initialize basic dialog functionality"""
-
-    def __init__(self, locatorClass, expectedTitle, driver):
-        super(BaseDialog, self).__init__(driver)
-        self.locatorClass = locatorClass
-        self.expectedTitle = expectedTitle
-
-    def is_title_matches(self, locatorClass, expectedTitle):
-        """ Verifies the title """
-        WebDriverWait(self.driver, 20).until(
-            lambda driver: self.driver.find_element(*locatorClass.title_bar)
-        )
-        return expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
-
-    def click_close_button(self, locatorClass):
-        self.click_object(*locatorClass.close_button)
-
-    def click_cancel_button(self, locatorClass):
-        self.click_object(*locatorClass.cancel_button)
-
-    def click_ok_button(self, locatorClass):
-        self.click_object(*locatorClass.ok_button)
-
-
-
 class BaseDialog(BasePage):
     """Bass class to initialize basic dialog functionality"""
+    expectedTitle = ""
+    locatorClass = ManageColorsDialogLocators  # the child class will override, but you need to
+                                               # initialize it with something in the parent class
 
-    def is_title_matches(self, locatorClass, expectedTitle):
-        """ Verifies the title """
+
+    def does_title_match(self, locatorClass=locatorClass):
+        """Verifies the title"""
         WebDriverWait(self.driver, 20).until(
             lambda driver: self.driver.find_element(*locatorClass.title_bar)
         )
-        return expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
+        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
 
-    def click_close_button(self, locatorClass):
+    def click_close_button(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.close_button)
 
-    def click_cancel_button(self, locatorClass):
+    def click_cancel_button(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.cancel_button)
 
-    def click_ok_button(self, locatorClass):
+    def click_ok_button(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.ok_button)
 
 class LoginPage(BasePage):
@@ -136,7 +115,7 @@ class LoginPage(BasePage):
     password_field = TextElement(*LoginPageLocators.pwd_field)
     signin_button = TextElement(*LoginPageLocators.signin_button)
 
-    def is_title_matches(self):
+    def does_title_match(self):
         """Verifies that the hardcoded text "Sign In" appears in page title"""
         return self.expectedTitle in self.driver.title
 
@@ -162,7 +141,7 @@ class WorkspacePage(BasePage):
     """ Workspace page action methods go here"""
     expectedTitle = "P2UX Builder"
 
-    def is_title_matches(self):
+    def does_title_match(self):
         """Verifies the page title"""
         return self.expectedTitle in self.driver.title
 
@@ -208,32 +187,19 @@ class WorkspacePage(BasePage):
 
     # the top nav sections will go into separate classes, since they're used in other pages
 
-class DeleteItemsDialog(BasePage):
+class DeleteItemsDialog(BaseDialog):
     expectedTitle = "Delete Items"
+    locatorClass = DeleteItemsDialogLocator
 
-    def is_title_matches(self):
-        """ Verifies the title """
-        WebDriverWait(self.driver, 20).until(
-            lambda driver: self.driver.find_element(*DeleteItemsDialogLocator.title_bar)
-        )
-        return self.expectedTitle in self.driver.find_element(*DeleteItemsDialogLocator.title_bar).text
+    def click_yes_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.yes_button)
 
-    def click_yes_button(self):
-        self.click_object(*DeleteItemsDialogLocator.yes_button)
+    def click_no_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.no_button)
 
-    def click_no_button(self):
-        self.click_object(*DeleteItemsDialogLocator.no_button)
-
-class ManageColorsDialog(BasePage):
+class ManageColorsDialog(BaseDialog):
     expectedTitle = "Manage colors"
     locatorClass = ManageColorsDialogLocators
-
-    def is_title_matches(self, locatorClass=locatorClass):
-        """ Verifies the title """
-        WebDriverWait(self.driver, 20).until(
-            lambda driver: self.driver.find_element(*locatorClass.title_bar)
-        )
-        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
 
     #close button
     #done button
@@ -241,78 +207,41 @@ class ManageColorsDialog(BasePage):
     #gradient button
     #+ button
     #individual color buttons
-    def click_close_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.close_button)
 
     def click_done_button(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.done_button)
 
-class ManageFontsDialog(BasePage):
+class ManageFontsDialog(BaseDialog):
     expectedTitle = "Manage Fonts"
     locatorClass = ManageFontsDialogLocators
 
-    def is_title_matches(self, locatorClass=locatorClass):
-        """ Verifies the title """
-        WebDriverWait(self.driver, 20).until(
-            lambda driver: self.driver.find_element(*locatorClass.title_bar)
-        )
-        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
-
     #+ button
     #individual font buttons
-    def click_close_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.close_button)
+    def click_done_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.done_button)
+
+class ManageImagesDialog(BaseDialog):
+    expectedTitle = "Manage Images"
+    locatorClass = ManageImagesDialogLocators
+
+class ManageStylesDialog(BaseDialog):
+    expectedTitle = "Manage Styles"
+    locatorClass = ManageStylesDialogLocators
+
+class NewApplicationDialog(BaseDialog):
+    """ New Application dialog action methods go here """
+    expectedTitle = "New Application"
+    locatorClass = NewApplicationDialogLocators
+
+    #fields with user input
+    appname_field = TextElement(*locatorClass.name_field)
+    #appname_field = TextElement(*NewApplicationDialogLocators.name_field)
 
     def click_done_button(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.done_button)
 
-class ManageImagesDialog(BasePage):
-    expectedTitle = "Manage Images"
-    locatorClass = ManageImagesDialogLocators
-
-    def is_title_matches(self, locatorClass=locatorClass):
-        """ Verifies the title """
-        WebDriverWait(self.driver, 20).until(
-            lambda driver: self.driver.find_element(*locatorClass.title_bar)
-        )
-        return self.expectedTitle in self.driver.find_element(*locatorClass.title_bar).text
-
-    #+ button
-    #individual font buttons
-    def click_close_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.close_button)
-
-    def click_ok_button(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.ok_button)
-
-class NewApplicationDialog(BasePage):
-    """ New Application dialog action methods go here """
-    expectedTitle = "New Application"
-
-    #fields with user input
-    appname_field = TextElement(*NewApplicationDialogLocators.name_field)
-
-    def is_title_matches(self):
-        """ Verifies the title """
-        WebDriverWait(self.driver, 2).until(
-            lambda driver: self.driver.find_element(*NewApplicationDialogLocators.close_button)
-        )
-        return self.expectedTitle in self.driver.find_element(*NewApplicationDialogLocators.title_bar).text
-
-    def click_close_button(self):
-        self.click_object(*NewApplicationDialogLocators.close_button)
-
-    def click_cancel_button(self):
-        self.click_object(*NewApplicationDialogLocators.cancel_button)
-
-    def click_done_button(self):
-        self.click_object(*NewApplicationDialogLocators.done_button)
-
-    def click_next_button(self):
-        self.click_object(*NewApplicationDialogLocators.next_button)
-
-    #def click_add_design_button(self):
-    #    self.click_object(*NewApplicationDialogLocators.add_design_button)
+    def click_next_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.next_button)
 
     def createApp(self, app_name):
         """ Creates an app with the given name"""
@@ -321,7 +250,7 @@ class NewApplicationDialog(BasePage):
         self.click_next_button()
         self.click_done_button()
 
-                # Close button - the X at the upper right of the dialog
+        # Close button - the X at the upper right of the dialog
         #close_button = (By.XPATH, "//div/class='icon icon-Cancel'")
         # Cancel button
         # Done button
@@ -350,6 +279,9 @@ class TopNav(BasePage):
 
     def click_colors_icon(self):
         self.click_object(*TopNavLocators.colors_icon)
+
+    def click_styles_icon(self):
+        self.click_object(*TopNavLocators.styles_icon)
 
     def logout(self):
         """Logs out"""
@@ -385,8 +317,7 @@ class NewScreenDialog(BaseDialog):
     def createScreen(self, screen_name):
         """ Creates an app with the given name"""
         self.screenname_field = screen_name
-        #time.sleep(2)
-        self.click_ok_button(self.locatorClass)
+        self.click_ok_button()
 
 class NewPanelDialog(BaseDialog):
     """ New Panel dialog action methods go here """
@@ -407,7 +338,6 @@ class NewPanelDialog(BaseDialog):
         if height != 100:
             self.height_field = ""
             self.height_field = height
-        #time.sleep(2)
         self.click_ok_button()
 
 class DeleteScreensDialog(BaseDialog):
@@ -419,7 +349,7 @@ class AppEditorPage(BasePage):
     """ Workspace page action methods go here"""
     expectedTitle = "P2UX Builder"
 
-    def is_title_matches(self):
+    def does_title_match(self):
         """Verifies the page title"""
         return self.expectedTitle in self.driver.title
 

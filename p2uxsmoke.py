@@ -86,12 +86,12 @@ class P2uxSmokeTest(unittest.TestCase):
         workspace_page = page.WorkspacePage(self.driver)
         newapp_dialog = page.NewApplicationDialog(self.driver)
 
-        assert login_page.is_title_matches(), "Login Screen title doesn't match."
+        assert login_page.does_title_match(), "Login Screen title doesn't match."
         verStr = login_page.get_version()
         print "\nVersion = " + verStr
 
         login_page.login(uname, passwordDec)
-        assert workspace_page.is_title_matches, "Not in Workspace Page after logging in."
+        assert workspace_page.does_title_match(), "Not in Workspace Page after logging in."
         time.sleep(2)
 
         #top_nav.logout()  #I can't get the logout menu to work to save my life :-/
@@ -100,7 +100,7 @@ class P2uxSmokeTest(unittest.TestCase):
         #exit()
 
         workspace_page.click_add_app_tile()
-        assert newapp_dialog.is_title_matches(), "Not in New Application dialog."
+        assert newapp_dialog.does_title_match(), "Not in New Application dialog."
         newapp_dialog.createApp(app_name)
 
         time.sleep(2)
@@ -123,10 +123,10 @@ class P2uxSmokeTest(unittest.TestCase):
 
         verStr = login_page.get_version()
         print "\nVersion = " + verStr
-        assert login_page.is_title_matches(), "Login Screen title doesn't match."
+        assert login_page.does_title_match(), "Login Screen title doesn't match."
 
         login_page.login(uname, passwordDec)
-        assert workspace_page.is_title_matches, "Not in Workspace Page after logging in."
+        assert workspace_page.does_title_match, "Not in Workspace Page after logging in."
 
 
     #@unittest.skip("skipping for now.")
@@ -136,7 +136,7 @@ class P2uxSmokeTest(unittest.TestCase):
         newapp_dialog = page.NewApplicationDialog(self.driver)
 
         workspace_page.click_add_app_tile()
-        assert newapp_dialog.is_title_matches(), "Not in New Application dialog."
+        assert newapp_dialog.does_title_match(), "Not in New Application dialog."
 
         newapp_dialog.createApp(app_name)
         assert workspace_page.does_app_exist(app_name), "App: " + app_name + " wasn't created."
@@ -150,23 +150,30 @@ class P2uxSmokeTest(unittest.TestCase):
         manage_fonts_dialog = page.ManageFontsDialog(self.driver)
         manage_images_dialog = page.ManageImagesDialog(self.driver)
         manage_colors_dialog = page.ManageColorsDialog(self.driver)
+        manage_styles_dialog = page.ManageStylesDialog(self.driver)
 
         #fonts
         top_nav.click_fonts_icon()
-        assert manage_fonts_dialog.is_title_matches(), "Not in Manage Fonts dialog"
+        assert manage_fonts_dialog.does_title_match(), "Not in Manage Fonts dialog"
         manage_fonts_dialog.click_close_button()
 
         #images
         top_nav.click_images_icon()
-        assert manage_images_dialog.is_title_matches(), "Not in Manage Images dialog"
+        assert manage_images_dialog.does_title_match(), "Not in Manage Images dialog"
+        #assert manage_images_dialog.is_title_matches(), "Not in Manage Images dialog"
         manage_images_dialog.click_close_button()
 
         #colors -- need to have app selected
         workspace_page.selectApp(app_name)
         top_nav.click_colors_icon()
-        assert manage_colors_dialog.is_title_matches(), "Not in Manage Colors dialog"
+        assert manage_colors_dialog.does_title_match(), "Not in Manage Colors dialog"
         manage_colors_dialog.click_close_button()
 
+        #colors -- need to have app selected
+        workspace_page.selectApp(app_name)
+        top_nav.click_styles_icon()
+        assert manage_styles_dialog.does_title_match(), "Not in Manage Styles dialog"
+        manage_colors_dialog.click_close_button()
 
     #@unittest.skip("skipping for now.")
     def test_04_quick_search(self):
@@ -198,7 +205,7 @@ class P2uxSmokeTest(unittest.TestCase):
 
         workspace_page.openApp(app_name)
         left_nav.click_new_screen()
-        newscreen_dialog.is_title_matches(newscreen_dialog.locatorClass, newscreen_dialog.expectedTitle), "New Screen title doesn't match."
+        newscreen_dialog.does_title_match(), "New Screen title doesn't match."
         newscreen_dialog.createScreen(screen_name)
 
         top_nav.click_MyApps_link()

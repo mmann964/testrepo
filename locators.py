@@ -48,6 +48,7 @@ class TopNavLocators(object):
     colors_icon = (By.XPATH, '//*[@class="icon icon-Colors"]')
     fonts_icon = (By.XPATH, '//*[@class="icon icon-Fonts"]')
     images_icon = (By.XPATH, '//*[@class="icon icon-Images"]')
+    styles_icon = (By.XPATH, '//*[@class="icon icon-Styles"]')
     search_box = (By.XPATH, '//*[@title="Find"]')
     menu_dropdown = (By.XPATH, "//span[3]/bldr-user-dropdown")
     logout_menu = (By.XPATH, '//*[@id="item-template"][3]')
@@ -61,15 +62,20 @@ class DeleteItemsDialogLocator(DialogLocators):
 class ManageColorsDialogLocators(DialogLocators):
     """A class for Manage Colors dialog locators"""
     # Still need Color, Gradient, +, Individual colors buttons
-    done_button = (By.CSS_SELECTOR, 'button.btn--dialog.ng-binding.ng-scope.ok')
+    done_button = DialogLocators.ok_button
 
 class ManageFontsDialogLocators(DialogLocators):
     """A class for Manage Fonts dialog locators"""
     # Still need +, Individual font delete buttons
+    done_button = DialogLocators.ok_button
 
 class ManageImagesDialogLocators(DialogLocators):
     """A class for Manage Images dialog locators"""
     # Still need Search, Filters, +, View, Delete, Individual images buttons
+
+class ManageStylesDialogLocators(DialogLocators):
+    """A class for Manage Styles dialog locators"""
+    # Still need Delete, Individual images buttons
 
 class NewScreenDialogLocators(DialogLocators):
     """A class for the New Screen dialog locators"""
