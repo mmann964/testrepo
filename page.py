@@ -20,6 +20,7 @@ from locators import NewScreenDialogLocators
 from locators import NewPanelDialogLocators
 from locators import DeleteScreensDialogLocators
 from locators import AppEditorPageLocators
+from locators import ScreenEditorPageLocators
 import time
 #import locators
 
@@ -33,6 +34,18 @@ class BasePage(object):
 
     def __init__(self, driver):
         self.driver = driver
+
+    def highlight(self, *locator):
+        """Highlights (blinks) the element"""
+        if self.check_object_exists(*locator):
+            element = self.driver.find_element(*locator)
+            original_style = element.get_attribute('style')
+            self.driver.execute_script("arguments[0].setAttribute('style', arguments[1]);", element,
+                                       "background: yellow; border: 2px solid red;")
+            time.sleep(3)
+            self.driver.execute_script("arguments[0].setAttribute('style', arguments[1]);", element,
+                                       original_style)
+
 
     def check_object_exists(self, *locator):
         """returns true of the object exists, false if it doesn't"""
@@ -346,7 +359,7 @@ class DeleteScreensDialog(BaseDialog):
     locatorClass = DeleteScreensDialogLocators
 
 class AppEditorPage(BasePage):
-    """ Workspace page action methods go here"""
+    """ App Editor page action methods go here"""
     expectedTitle = "P2UX Builder"
 
     def does_title_match(self):
@@ -355,17 +368,15 @@ class AppEditorPage(BasePage):
 
     def openScreen(self, screen_name):
         """Double clicks on app with given name"""
-        locatorStr = ('//*[@title="' + screen_name + '"]')
-        self.double_click_object(By.XPATH, locatorStr)
+        time.sleep(1)
+        screen_tile = AppEditorPageLocators(screen_name)
+        self.double_click_object(*screen_tile.screen_tile)
 
     def selectScreen(self, screen_name):
-        """Clicks on app with given name"""
-        time.sleep(2)  #this is a hack.  Otherwise it won't find the app consistently.  Need to double-check implicit/explicit waits
-        #locatorStr = ('//*[@title="' + app_name + '"]')
-        #self.click_object(By.XPATH, locatorStr)
+        """Clicks on screen with given name"""
+        time.sleep(1)  #this is a hack.  Otherwise it won't find the app consistently.  Need to double-check implicit/explicit waits
         screen_tile = AppEditorPageLocators(screen_name)
-        #self.click_object(*screen_tile.screen_tile)  # clicking the tile opens the screen.  Maybe it's clicking in the center?
-        self.click_object_at_location(1, 1, *screen_tile.screen_tile)
+        self.click_object_at_location(1, 1, *screen_tile.screen_tile)  #clicking without specifying location opens the screen
 
     def deleteScreen(self, screen_name):
         """Deletes screen with given name"""
@@ -383,3 +394,96 @@ class AppEditorPage(BasePage):
             return True
         else:
             return False
+
+
+class ScreenEditorPage(BasePage):
+    """ Screen Editor page action methods go here"""
+    expectedTitle = "P2UX Builder"
+    locatorClass = ScreenEditorPageLocators
+
+    def does_title_match(self):
+        """Verifies the page title"""
+        return self.expectedTitle in self.driver.title
+
+    def add_image_control(self, locatorClass=locatorClass):
+        #self.double_click_object(*locatorClass.ImageControl)
+        self.click_object(*locatorClass.ImageControl)
+
+    def add_button_control(self, locatorClass=locatorClass):
+        #self.double_click_object(*locatorClass.ButtonControl)
+        self.click_object(*locatorClass.ButtonControl)
+
+    def add_radio_control(self, locatorClass=locatorClass):
+        #self.double_click_object(*locatorClass.RadioControl)
+        self.click_object(*locatorClass.RadioControl)
+
+    def add_toggle_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.ToggleControl)
+
+    def add_map_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.MapControl)
+
+    def add_radial_progress_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.RadialProgressControl)
+
+    def add_progress_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.ProgressControl)
+
+    def add_slider_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.SliderControl)
+
+    def add_scrollcontainer_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.ScrollContainerControl)
+
+    def add_text_input_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.TextInputControl)
+
+    def add_web_view_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.WebViewControl)
+
+    def add_custom_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.CustomControl)
+
+    def add_list_collection_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.ListCollectionControl)
+
+    def add_grid_collection_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.GridCollectionControl)
+
+    def add_page_indicator_control(self, locatorClass=locatorClass):
+        self.double_click_object(*locatorClass.PageIndicatorControl)
+
+    def selectComponent(self, component_name):
+        """Selects the component with given name"""
+        time.sleep(1)  #this is a hack.  Otherwise it won't find the app consistently.  Need to double-check implicit/explicit waits
+        component_tiles = ScreenEditorPageLocators(component_name)
+        self.click_object_at_location(1, 1, *component_tiles.component_name_tile)  #clicking without specifying location opens the screen
+
+    def hideOrShowComponent(self, component_name):
+        """Clicks hide/show button for component with given name"""
+        # Should add separate functions for hide and show, based on the current state
+        time.sleep(1)  #this is a hack.  Otherwise it won't find the app consistently.  Need to double-check implicit/explicit waits
+        component_tiles = ScreenEditorPageLocators(component_name)
+        self.click_object(*component_tiles.component_visible_button)
+
+    def lockComponent(self, component_name):
+        """Clicks lock/unlock button for component with given name"""
+        # Should add separate functions for lock and unlock, based on current state
+        time.sleep(1)  #this is a hack.  Otherwise it won't find the app consistently.  Need to double-check implicit/explicit waits
+        component_tiles = ScreenEditorPageLocators(component_name)
+        self.click_object(*component_tiles.component_lock_button)
+
+    def copyComponent(self, component_name, locatorClass=locatorClass):
+        """Selects the given component and copies it"""
+        time.sleep(1)
+        self.selectComponent(component_name)
+        # self.highlight(*locatorClass.copy_component_button)
+        self.click_object(*locatorClass.copy_component_button)
+
+    def deleteComponent(self, component_name, locatorClass=locatorClass):
+        """Selects the given component and copies it"""
+        time.sleep(1)
+        self.selectComponent(component_name)
+        #self.highlight(*locatorClass.delete_component_button)
+        self.click_object(*locatorClass.delete_component_button)
+

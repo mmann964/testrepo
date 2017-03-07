@@ -26,8 +26,40 @@ class AppEditorPageLocators(object):
     """A class for App Editor page locators."""
     def __init__(self, screen_name):
         # Screen tile -- assign name dynamically
-        #self.screen_tile = (By.XPATH, '//*[@title="' + screen_name + '"]')
         self.screen_tile = (By.XPATH, '//*[@title="' + screen_name + '"]/..//*[@class="screen-card__img"]')
+
+
+class ScreenEditorPageLocators(object):
+    """A class for Screen Editor page locators"""
+    # I wonder if I should put these in the left nav...
+    ImageControl = (By.XPATH, '//*[@class="icon icon-Image"]')
+    ButtonControl = (By.XPATH, '//*[@class="icon icon-Button"]')
+    RadioControl = (By.XPATH, '//*[@class="icon icon-Radio"]')
+    ToggleControl = (By.XPATH, '//*[@class="icon icon-Checkbox"]')
+    MapControl = (By.XPATH, '//*[@class="icon icon-Map"]')
+    RadialProgressControl = (By.XPATH, '//*[@class="icon icon-RadialProgress"]')
+    ProgressControl = (By.XPATH, '//*[@class="icon icon-ProgressBar"]')
+    SliderControl = (By.XPATH, '//*[@class="icon icon-Slider"]')
+    ScrollContainerControl = (By.XPATH, '//*[@class="icon icon-ScrollContainer"]')
+    TextInputControl = (By.XPATH, '//*[@class="icon icon-UserInput"]')
+    WebViewControl = (By.XPATH, '//*[@class="icon icon-WebView"]')
+    CustomControl = (By.XPATH, '//*[@class="icon icon-CustomControl"]')
+    ListCollectionControl = (By.XPATH, '//*[@class="icon icon-List"]')
+    GridCollectionControl = (By.XPATH, '//*[@class="icon icon-Grid2"]')
+    PageIndicatorControl = (By.XPATH, '//*[@class="icon icon-More"]')
+
+    # Active Components
+    copy_component_button = (By.XPATH, '//*[@class="btn btn--selections sm"]/*[@class="icon icon-Duplicate"]')
+    delete_component_button = (By.XPATH, '//*[@class="active-component__buttons"]//*[@class="btn btn--selections sm"]//*[@class="icon icon-Delete"]')
+
+
+    def __init__(self, component_name):
+        #self.component_name_tile = (By.XPATH, '//*[@class="active-component__item name"]//*[contains(text(), ' + component_name + ')]')
+        self.component_name_tile = (By.XPATH, "//*[contains(text(), '" + component_name + "')]")
+        self.component_visible_button = (By.XPATH, "//*[contains(text(), '" + component_name + "')]/../*[@title='Show/hide component']")
+        self.component_lock_button = (By.XPATH, "//*[contains(text(), '" + component_name + "')]/../*[@title='Lock component']")
+
+
 
 class NewApplicationDialogLocators(DialogLocators):
     """A class for New Application dialog locators"""
@@ -44,6 +76,15 @@ class LeftNavLocators(object):
 class TopNavLocators(object):
     """A class for Top Navigation locators"""
     MyApps_link = (By.CSS_SELECTOR, 'span.ng-binding')
+    select_icon = (By.XPATH, '//*[@class="icon icon-Pointer"]')
+    rectangle_icon = (By.XPATH, '//*[@class="icon icon-Rectangle"]')
+    ellipse_icon = (By.XPATH, '//*[@class="icon icon-Ellipse"]')
+    line_icon = (By.XPATH, '//*[@class="icon icon-Line"]')
+    shape_selection_icon = (By.XPATH, '//*[@class="icon icon-Chevron"]')
+    rectangle_dropdown = (By.XPATH, '//*[@class="dropdown-template-margin icon-Rectangle"]')
+    ellipse_dropdown = (By.XPATH, '//*[@class="dropdown-template-margin icon-Ellipse"]')
+    line_dropdown = (By.XPATH, '//*[@class="dropdown-template-margin icon-Line"]')
+    text_icon = (By.XPATH, '//*[@class="icon icon-Text"]')
     delete_icon = (By.XPATH, '//*[@class="icon icon-Delete"]')
     colors_icon = (By.XPATH, '//*[@class="icon icon-Colors"]')
     fonts_icon = (By.XPATH, '//*[@class="icon icon-Fonts"]')
