@@ -21,6 +21,8 @@ from locators import NewPanelDialogLocators
 from locators import DeleteScreensDialogLocators
 from locators import AppEditorPageLocators
 from locators import ScreenEditorPageLocators
+from locators import SizeAndPositionPaletteLocators
+from locators import ToolTipDialog
 import time
 #import locators
 
@@ -56,8 +58,20 @@ class BasePage(object):
             return False
         return True
 
+    def dismiss_tooltip(self):
+        """Look for the tooltip and close it if necessary"""
+        time.sleep(.5)  # give it time to come up if it's going to come up
+        self.driver.implicitly_wait(0)
+        while self.check_object_exists(*ToolTipDialog.gotIt_btn):
+            element = self.driver.find_element(*ToolTipDialog.gotIt_btn)
+            element.click()
+        self.driver.implicitly_wait(3)
+        time.sleep(.5)
+
+
     def click_object(self, *locator):
         """clicks on object"""
+        self.dismiss_tooltip()
         WebDriverWait(self.driver, 20).until(
             lambda driver: self.driver.find_element(*locator)
         )
@@ -79,6 +93,7 @@ class BasePage(object):
 
     def double_click_object(self, *locator):
         """double clicks object"""
+        self.dismiss_tooltip()
         WebDriverWait(self.driver, 20).until(
             lambda driver: self.driver.find_element(*locator)
         )
@@ -88,6 +103,7 @@ class BasePage(object):
 
     def click_object_at_location(self, xoffset, yoffset, *locator):
         """clicks object at x, y offset"""
+        self.dismiss_tooltip()
         WebDriverWait(self.driver, 20).until(
             lambda driver: self.driver.find_element(*locator)
         )
@@ -166,6 +182,7 @@ class WorkspacePage(BasePage):
 
     def openApp(self, app_name):
         """Double clicks on app with given name"""
+        time.sleep(2)
         locatorStr = ('//*[@title="' + app_name + '"]')
         self.double_click_object(By.XPATH, locatorStr)
 
@@ -279,34 +296,34 @@ class NewApplicationDialog(BaseDialog):
 
 class TopNav(BasePage):
     """Top Navigation methods go here"""
-    search_field = TextElement(*TopNavLocators.search_box)
+    locatorClass = TopNavLocators
+    search_field = TextElement(*locatorClass.search_box)
 
-    def click_MyApps_link(self):
-        self.click_object(*TopNavLocators.MyApps_link)
+    def click_MyApps_link(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.MyApps_link)
 
-    def click_fonts_icon(self):
-        self.click_object(*TopNavLocators.fonts_icon)
+    def click_fonts_icon(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.fonts_icon)
 
-    def click_images_icon(self):
-        self.click_object(*TopNavLocators.images_icon)
+    def click_images_icon(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.images_icon)
 
-    def click_colors_icon(self):
-        self.click_object(*TopNavLocators.colors_icon)
+    def click_colors_icon(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.colors_icon)
 
-    def click_styles_icon(self):
-        self.click_object(*TopNavLocators.styles_icon)
+    def click_styles_icon(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.styles_icon)
 
-    def logout(self):
+    def click_app_link(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.app_link)
+
+    def logout(self, locatorClass=locatorClass):
         """Logs out"""
         WebDriverWait(self.driver, 2).until(
-            lambda driver: self.driver.find_element(*TopNavLocators.menu_dropdown)
+            lambda driver: self.driver.find_element(*locatorClass.user_menu_dropdown)
         )
-        self.click_object(*TopNavLocators.menu_dropdown)
-        time.sleep(2)
-        #WebDriverWait(self.driver, 5).until(
-        #    lambda driver: self.driver.find_element(*TopNavLocators.logout_menu)
-        #)
-        self.click_object(*TopNavLocators.logout_menu)
+        self.click_object(*locatorClass.user_menu_dropdown)
+        self.click_object(*locatorClass.logout_menu)
 
 class LeftNav(BasePage):
     """Left Navigation methods go here"""
@@ -418,40 +435,40 @@ class ScreenEditorPage(BasePage):
         self.click_object(*locatorClass.RadioControl)
 
     def add_toggle_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.ToggleControl)
+        self.click_object(*locatorClass.ToggleControl)
 
     def add_map_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.MapControl)
+        self.click_object(*locatorClass.MapControl)
 
     def add_radial_progress_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.RadialProgressControl)
+        self.click_object(*locatorClass.RadialProgressControl)
 
     def add_progress_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.ProgressControl)
+        self.click_object(*locatorClass.ProgressControl)
 
     def add_slider_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.SliderControl)
+        self.click_object(*locatorClass.SliderControl)
 
     def add_scrollcontainer_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.ScrollContainerControl)
+        self.click_object(*locatorClass.ScrollContainerControl)
 
     def add_text_input_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.TextInputControl)
+        self.click_object(*locatorClass.TextInputControl)
 
     def add_web_view_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.WebViewControl)
+        self.click_object(*locatorClass.WebViewControl)
 
     def add_custom_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.CustomControl)
+        self.click_object(*locatorClass.CustomControl)
 
     def add_list_collection_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.ListCollectionControl)
+        self.click_object(*locatorClass.ListCollectionControl)
 
     def add_grid_collection_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.GridCollectionControl)
+        self.click_object(*locatorClass.GridCollectionControl)
 
     def add_page_indicator_control(self, locatorClass=locatorClass):
-        self.double_click_object(*locatorClass.PageIndicatorControl)
+        self.click_object(*locatorClass.PageIndicatorControl)
 
     def selectComponent(self, component_name):
         """Selects the component with given name"""
@@ -487,3 +504,19 @@ class ScreenEditorPage(BasePage):
         #self.highlight(*locatorClass.delete_component_button)
         self.click_object(*locatorClass.delete_component_button)
 
+class SizeAndPositionPalette(BasePage):
+    """Size and Position Palette page action methods go here"""
+    locatorClass = SizeAndPositionPaletteLocators
+
+    #fields with user input
+    width = TextElement(*locatorClass.width)
+
+    def highlightWidth(self, locatorClass=locatorClass):
+        self.highlight(*locatorClass.width)
+
+    def getWidth(self):
+        return self.width
+
+    def setWidth(self, val):
+        self.width = ""
+        self.width = val

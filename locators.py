@@ -76,6 +76,7 @@ class LeftNavLocators(object):
 class TopNavLocators(object):
     """A class for Top Navigation locators"""
     MyApps_link = (By.CSS_SELECTOR, 'span.ng-binding')
+    app_link = (By.XPATH, '//*[@ng-click="vm.routeParent()"]')
     select_icon = (By.XPATH, '//*[@class="icon icon-Pointer"]')
     rectangle_icon = (By.XPATH, '//*[@class="icon icon-Rectangle"]')
     ellipse_icon = (By.XPATH, '//*[@class="icon icon-Ellipse"]')
@@ -91,8 +92,14 @@ class TopNavLocators(object):
     images_icon = (By.XPATH, '//*[@class="icon icon-Images"]')
     styles_icon = (By.XPATH, '//*[@class="icon icon-Styles"]')
     search_box = (By.XPATH, '//*[@title="Find"]')
-    menu_dropdown = (By.XPATH, "//span[3]/bldr-user-dropdown")
-    logout_menu = (By.XPATH, '//*[@id="item-template"][3]')
+    user_menu_dropdown = (By.XPATH, "//span[3]/bldr-user-dropdown")
+    logout_menu = (By.XPATH, "//*[contains(text(), 'Logout')]")
+
+    #def __init__(self, app_name):
+        # Screen tile -- assign name dynamically
+        #self.app_link = (By.XPATH, '//*[@class="ng-scope ng-isolate-scope"]/[contains(text(), ' + app_name + ')]')
+        #self.app_link = (By.XPATH, '//*[contains(text(), "' + app_name + '")]')
+
 
 
 class DeleteItemsDialogLocator(DialogLocators):
@@ -131,6 +138,21 @@ class NewPanelDialogLocators(DialogLocators):
 class DeleteScreensDialogLocators(DialogLocators):
     """A class for the Delete Screens dialog locators"""
 
+class ComponentPaletteLocators(object):
+    """A class for Component Palette locators"""
+    name = (By.XPATH, '//input[@title="Name"]')
+    shape = (By.XPATH, '//input[@title="Shape"]')
+    style = (By.XPATH, '//input[@title="Style"]')
+    opacity = (By.XPATH, '//input[@title="Opacity"]')
 
+class SizeAndPositionPaletteLocators(object):
+    """A class for Size & Position Palette locators"""
+    width = (By.XPATH, '//input[@title="W"]')
+    height = (By.XPATH, '//input[@title="H"]')
 
-
+class ToolTipDialog(object):
+    """A class for ToolTip Dialog locators"""
+    gotIt_btn = (By.XPATH, '//*[@class="tooltip_nav-btn ng-binding ng-scope"]') # Also applies to Next tooltip button
+    close_button = (By.XPATH, '//*[@class="icon icon-Cancel"]')
+    tooltip_title = (By.XPATH, '//*[@class="tooltip_title ng-binding"]')
+    tooltip_text = (By.XPATH, '//*[@class="tooltip_text ng-binding"]')
