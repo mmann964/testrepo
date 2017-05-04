@@ -330,6 +330,12 @@ class LeftNav(BasePage):
     locatorClass = LeftNavLocators
 
     def click_new_screen(self, locatorClass=locatorClass):
+        #Workaround for BUILDER-1381:  wait for Home screen tile to load before clicking New Screen
+        wait = WebDriverWait(self.driver, 10)
+        #screen_tile = AppEditorPageLocators("Home")
+        #element = wait.until(expected_conditions.element_to_be_clickable((*screen_tile.screen_tile)))  #syntax error
+        element = wait.until(expected_conditions.element_to_be_clickable((By.XPATH, '//*[@title="Home"]/..//*[@class="screen-card__img"]')))
+
         self.click_object(*locatorClass.New_Screen)
 
     def click_new_panel(self, locatorClass=locatorClass):

@@ -24,6 +24,7 @@ class WorkspacePageLocators(object):
 
 class AppEditorPageLocators(object):
     """A class for App Editor page locators."""
+    #screen_dropdown = (By.XPATH, '//*[@class="collection__filter ng-binding"')
     def __init__(self, screen_name):
         # Screen tile -- assign name dynamically
         self.screen_tile = (By.XPATH, '//*[@title="' + screen_name + '"]/..//*[@class="screen-card__img"]')
