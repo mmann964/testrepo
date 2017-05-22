@@ -23,6 +23,7 @@ from locators import AppEditorPageLocators
 from locators import ScreenEditorPageLocators
 from locators import SizeAndPositionPaletteLocators
 from locators import ToolTipDialog
+from locators import PublishContentDialogLocators
 import time
 #import locators
 
@@ -192,7 +193,8 @@ class WorkspacePage(BasePage):
         #locatorStr = ('//*[@title="' + app_name + '"]')
         #self.click_object(By.XPATH, locatorStr)
         app_tile = WorkspacePageLocators(app_name)
-        self.click_object(*app_tile.app_tile)
+        #self.highlight(*app_tile.app_tile)
+        self.click_object_at_location(1, 1, *app_tile.app_tile)
 
     def deleteApp(self, app_name, permDelete = True):
         """Deletes app with given name"""
@@ -324,6 +326,11 @@ class TopNav(BasePage):
         )
         self.click_object(*locatorClass.user_menu_dropdown)
         self.click_object(*locatorClass.logout_menu)
+
+    def click_publish_btn(self, locatorClass=locatorClass):
+        """Presses the Publish button"""
+        #self.highlight(*locatorClass.publish_btn)
+        self.click_object(*locatorClass.publish_btn)
 
 class LeftNav(BasePage):
     """Left Navigation methods go here"""
@@ -526,3 +533,15 @@ class SizeAndPositionPalette(BasePage):
     def setWidth(self, val):
         self.width = ""
         self.width = val
+
+class PublishContentDialog(BaseDialog):
+    """Publish Content Dialog action methods go here"""
+    locatorClass = PublishContentDialogLocators
+    expectedTitle = "Publish Content"
+
+    # To-Do:  functions to check boxes for form factors, function to check private/public, wrapper function to publish app
+
+    def click_publish_btn(self, locatorClass=locatorClass):
+        """Presses the Publish button"""
+        #self.highlight(*locatorClass.publish_btn)
+        self.click_object(*locatorClass.publish_button)

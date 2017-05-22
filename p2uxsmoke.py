@@ -143,19 +143,20 @@ class P2uxSmokeTest(unittest.TestCase):
 
 
     #@unittest.skip("skipping for now.")
-    def test_03_manage_options(self):
+    def test_03A_manage_fonts(self):
         """Check that you can select each of the manage options from the top nav"""
         top_nav = page.TopNav(self.driver)
-        workspace_page = page.WorkspacePage(self.driver)
         manage_fonts_dialog = page.ManageFontsDialog(self.driver)
-        manage_images_dialog = page.ManageImagesDialog(self.driver)
-        manage_colors_dialog = page.ManageColorsDialog(self.driver)
-        manage_styles_dialog = page.ManageStylesDialog(self.driver)
 
         #fonts
         top_nav.click_fonts_icon()
         assert manage_fonts_dialog.does_title_match(), "Not in Manage Fonts dialog"
         manage_fonts_dialog.click_close_button()
+
+    def test_03B_manage_images(self):
+        """Check that you can select each of the manage options from the top nav"""
+        top_nav = page.TopNav(self.driver)
+        manage_images_dialog = page.ManageImagesDialog(self.driver)
 
         #images
         top_nav.click_images_icon()
@@ -163,17 +164,29 @@ class P2uxSmokeTest(unittest.TestCase):
         #assert manage_images_dialog.is_title_matches(), "Not in Manage Images dialog"
         manage_images_dialog.click_close_button()
 
+    def test_03C_manage_colors(self):
+        """Check that you can select each of the manage options from the top nav"""
+        top_nav = page.TopNav(self.driver)
+        workspace_page = page.WorkspacePage(self.driver)
+        manage_colors_dialog = page.ManageColorsDialog(self.driver)
+
         #colors -- need to have app selected
         workspace_page.selectApp(app_name)
         top_nav.click_colors_icon()
         assert manage_colors_dialog.does_title_match(), "Not in Manage Colors dialog"
         manage_colors_dialog.click_close_button()
 
-        #colors -- need to have app selected
+    def test_03D_manage_styles(self):
+        """Check that you can select each of the manage options from the top nav"""
+        top_nav = page.TopNav(self.driver)
+        workspace_page = page.WorkspacePage(self.driver)
+        manage_styles_dialog = page.ManageStylesDialog(self.driver)
+
+        #styles -- need to have app selected
         workspace_page.selectApp(app_name)
         top_nav.click_styles_icon()
         assert manage_styles_dialog.does_title_match(), "Not in Manage Styles dialog"
-        manage_colors_dialog.click_close_button()
+        manage_styles_dialog.click_close_button()
 
     #@unittest.skip("skipping for now.")
     def test_04_quick_search(self):

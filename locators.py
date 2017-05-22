@@ -95,6 +95,7 @@ class TopNavLocators(object):
     search_box = (By.XPATH, '//*[@title="Find"]')
     user_menu_dropdown = (By.XPATH, "//span[3]/bldr-user-dropdown")
     logout_menu = (By.XPATH, "//*[contains(text(), 'Logout')]")
+    publish_btn = (By.XPATH, '//*[@class="ng-binding ng-scope"]')
 
     #def __init__(self, app_name):
         # Screen tile -- assign name dynamically
@@ -157,3 +158,10 @@ class ToolTipDialog(object):
     close_button = (By.XPATH, '//*[@class="icon icon-Cancel"]')
     tooltip_title = (By.XPATH, '//*[@class="tooltip_title ng-binding"]')
     tooltip_text = (By.XPATH, '//*[@class="tooltip_text ng-binding"]')
+
+class PublishContentDialogLocators(DialogLocators):
+    """A class for Publish Content dialog locators"""
+    iOS_Phone_box = (By.XPATH, '//') #iOS_table, android_phone, Android_tablet have same id
+    # <input type="checkbox" class="sq ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="config.build" ng-click="checkSelections()" ng-disabled="publishDone">
+    publish_private_box = (By.ID, 'publish-private')
+    publish_button = DialogLocators.ok_button
