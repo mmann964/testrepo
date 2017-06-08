@@ -21,9 +21,13 @@ from locators import NewPanelDialogLocators
 from locators import DeleteScreensDialogLocators
 from locators import AppEditorPageLocators
 from locators import ScreenEditorPageLocators
+from locators import ComponentPaletteLocators
 from locators import SizeAndPositionPaletteLocators
 from locators import ToolTipDialog
 from locators import PublishContentDialogLocators
+from locators import StyleDialogLocators
+from locators import ButtonStyleDialogLocators
+from locators import RadioButtonStyleDialogLocators
 import time
 #import locators
 
@@ -282,6 +286,11 @@ class NewApplicationDialog(BaseDialog):
         self.click_next_button()
         self.click_done_button()
 
+        # wait until the Home screen shows before exiting
+        wait = WebDriverWait(self.driver, 10)
+        element = wait.until(expected_conditions.element_to_be_clickable(
+            (By.XPATH, '//*[@title="Home"]/..//*[@class="screen-card__img"]')))
+
         # Close button - the X at the upper right of the dialog
         #close_button = (By.XPATH, "//div/class='icon icon-Cancel'")
         # Cancel button
@@ -302,6 +311,13 @@ class TopNav(BasePage):
     search_field = TextElement(*locatorClass.search_box)
 
     def click_MyApps_link(self, locatorClass=locatorClass):
+        # Workaround for BUILDER-1381:  wait for Home screen tile to load before clicking New Screen
+        wait = WebDriverWait(self.driver, 10)
+        # screen_tile = AppEditorPageLocators("Home")
+        element = wait.until(expected_conditions.element_to_be_clickable(locatorClass.MyApps_link))  #syntax error
+        #element = wait.until(expected_conditions.element_to_be_clickable(
+            #(By.XPATH, '//*[@title="Home"]/..//*[@class="screen-card__img"]')))
+
         self.click_object(*locatorClass.MyApps_link)
 
     def click_fonts_icon(self, locatorClass=locatorClass):
@@ -480,8 +496,8 @@ class ScreenEditorPage(BasePage):
     def add_grid_collection_control(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.GridCollectionControl)
 
-    def add_page_indicator_control(self, locatorClass=locatorClass):
-        self.click_object(*locatorClass.PageIndicatorControl)
+    #def add_page_indicator_control(self, locatorClass=locatorClass):
+    #    self.click_object(*locatorClass.PageIndicatorControl)
 
     def selectComponent(self, component_name):
         """Selects the component with given name"""
@@ -534,6 +550,20 @@ class SizeAndPositionPalette(BasePage):
         self.width = ""
         self.width = val
 
+class ComponentPalette(BasePage):
+    """Component Palette actions go here"""
+    locatorClass = ComponentPaletteLocators
+
+    #fields with user input
+    name = TextElement(*locatorClass.name)
+
+    def selectStyle(self, locatorClass=locatorClass):
+        mySelect = Select()
+        self.highlight(*locatorClass.add_style)
+
+    def click_add_style(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.add_style)
+
 class PublishContentDialog(BaseDialog):
     """Publish Content Dialog action methods go here"""
     locatorClass = PublishContentDialogLocators
@@ -545,3 +575,122 @@ class PublishContentDialog(BaseDialog):
         """Presses the Publish button"""
         #self.highlight(*locatorClass.publish_btn)
         self.click_object(*locatorClass.publish_button)
+
+class StyleDialog(BaseDialog):
+    """Generic Style Dialog methods go here"""
+    locatorClass = StyleDialogLocators
+    expectedTitle = "Create New Style"  # if it's in add mode
+
+    #fields with user input
+    name = TextElement(*locatorClass.name_field)
+
+    def setSize(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.size_chkbox)
+        self.setItem(checked, element)
+
+    def setPosition(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.position_chkbox)
+        self.setItem(checked, element)
+
+    def setOpacity(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.opacity_chkbox)
+        self.setItem(checked, element)
+
+    def setRotation(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.rotation_chkbox)
+        self.setItem(checked, element)
+
+    def setInteractions(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.interactions_chkbox)
+        self.setItem(checked, element)
+
+    def setItem(self, checked, element):
+        if (element.get_attribute('checked')):  # if it's checked, only check it if checked is False
+            if checked == False:
+                element.click()
+        else:  # if it's not checked, only check it if checked is True
+            if checked == True:
+                element.click()
+
+class ButtonStyleDialog(StyleDialog):
+    """Button and Toggle Style Dialog methods go here"""
+    locatorClass = ButtonStyleDialogLocators
+
+    def setPadding(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.padding_chkbox)
+        self.setItem(checked, element)
+
+    def setShape(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.shape_chkbox)
+        self.setItem(checked, element)
+
+    def setFill(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.fill_chkbox)
+        self.setItem(checked, element)
+
+    def setBorder(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.border_chkbox)
+        self.setItem(checked, element)
+
+    def setShadow(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.shadow_chkbox)
+        self.setItem(checked, element)
+
+    def setCornerRadius(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.corner_radius_chkbox)
+        self.setItem(checked, element)
+
+    def setIcon(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.icon_chkbox)
+        self.setItem(checked, element)
+
+    def setTextValue(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.text_value_chkbox)
+        self.setItem(checked, element)
+
+    def setFontType(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.font_type_chkbox)
+        self.setItem(checked, element)
+
+    def setFontColor(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.font_color_chkbox)
+        self.setItem(checked, element)
+
+    def setFontSize(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.font_size_chkbox)
+        self.setItem(checked, element)
+
+    def setAlignment(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.alignment_chkbox)
+        self.setItem(checked, element)
+
+    def setVerticalAlignment(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.vertical_alignment_chkbox)
+        self.setItem(checked, element)
+
+    def setAllCaps(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.all_caps_chkbox)
+        self.setItem(checked, element)
+
+    def setTruncation(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.truncation_chkbox)
+        self.setItem(checked, element)
+
+    def setFontShadow(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.font_shadow_chkbox)
+        self.setItem(checked, element)
+
+
+class RadioButtonStyleDialog(ButtonStyleDialog):
+    """Radio Button Style Dialog methods go here"""
+    locatorClass = RadioButtonStyleDialogLocators
+
+    def setRadioGroup(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.radio_group_chkbox)
+        self.setItem(checked, element)
+
+    def setShape(self, checked = True, locatorClass=locatorClass):
+        element = self.driver.find_element(*locatorClass.shape_chkbox)
+        self.setItem(checked, element)
+
+

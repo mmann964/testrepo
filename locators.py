@@ -146,6 +146,7 @@ class ComponentPaletteLocators(object):
     shape = (By.XPATH, '//input[@title="Shape"]')
     style = (By.XPATH, '//input[@title="Style"]')
     opacity = (By.XPATH, '//input[@title="Opacity"]')
+    add_style = (By.XPATH, '//*[@class="icon icon-Add"]')
 
 class SizeAndPositionPaletteLocators(object):
     """A class for Size & Position Palette locators"""
@@ -165,3 +166,49 @@ class PublishContentDialogLocators(DialogLocators):
     # <input type="checkbox" class="sq ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="config.build" ng-click="checkSelections()" ng-disabled="publishDone">
     publish_private_box = (By.ID, 'publish-private')
     publish_button = DialogLocators.ok_button
+
+class StyleDialogLocators(DialogLocators):
+    """Generic Style dialog locators"""
+    # Should put the button to open/close general settings here.
+    name_field = (By.XPATH, '//*[@title="Name of Style (required)"]')
+    size_chkbox = (By.ID, 'attr_0_Size (W,H)')
+    position_chkbox = (By.ID, 'attr_1_Position (X,Y)')
+    opacity_chkbox = (By.ID, 'attr_2_Opacity')
+    rotation_chkbox = (By.ID, 'attr_0_Rotation')
+    interactions_chkbox = (By.ID, 'attr_1_Interactions')
+
+class ButtonStyleDialogLocators(StyleDialogLocators):
+    """Locators for Button Style Dialogs"""
+    # also works for toggle buttons
+    padding_chkbox = (By.ID, 'attr_0_Padding')
+    shape_chkbox = (By.ID, 'attr_1_Shape')
+
+    fill_chkbox = (By.ID, 'attr_0_Fill')
+    border_chkbox = (By.ID, 'attr_1_Border')
+    shadow_chkbox = (By.ID, 'attr_2_Shadow')
+    corner_radius_chkbox = (By.ID, 'attr_0_Corner Radius')
+    icon_chkbox = (By.ID, 'attr_1_Icon')
+    text_value_chkbox = (By.ID, 'attr_2_Text Value')
+    font_type_chkbox = (By.ID, 'attr_0_Font Type')
+    font_color_chkbox = (By.ID, 'attr_1_Font Color')
+    font_size_chkbox = (By.ID, 'attr_2_Font Size')
+    alignment_chkbox = (By.ID, 'attr_0_Alignment')
+    vertical_alignment_chkbox = (By.ID, 'attr_1_Vertical Alignment')
+    all_caps_chkbox = (By.ID, 'attr_2_All Caps')
+    truncation_chkbox = (By.ID, 'attr_0_Truncation')
+    font_shadow_chkbox = (By.ID, 'attr_1_Font Shadow')
+
+class RadioButtonStyleDialogLocators(ButtonStyleDialogLocators):
+    """Additional locators for Radio Buttons"""
+    radio_group_chkbox = (By.ID, 'attr_1_Radio Group')
+    shape_chkbox = (By.ID, 'attr_2_Shape')
+
+class ImageStyleDialogLocators(StyleDialogLocators):
+    """Locators for Image Styles"""
+    border_chkbox = (By.ID, 'attr_0_Border')
+    shadow_chkbox = (By.ID, 'attr_1_Shadow')
+    corner_radius_chkbox = (By.ID, 'attr_2_Corner Radius')
+    shape_chkbox = (By.ID, 'attr_0_Shape')
+    tap_through_chkbox = (By.ID, 'attr_1_Tap Through')
+    scale_chkbox = (By.ID, 'attr_0_Scale')
+    image_chkbox = (By.ID, 'attr_1_Image')

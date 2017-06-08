@@ -133,12 +133,14 @@ class P2uxSmokeTest(unittest.TestCase):
     def test_02_start_new_app(self):
         """Check that you can create a new app"""
         workspace_page = page.WorkspacePage(self.driver)
+        top_nav = page.TopNav(self.driver)
         newapp_dialog = page.NewApplicationDialog(self.driver)
 
         workspace_page.click_add_app_tile()
         assert newapp_dialog.does_title_match(), "Not in New Application dialog."
 
         newapp_dialog.createApp(app_name)
+        top_nav.click_MyApps_link()   # go back to the workspace
         assert workspace_page.does_app_exist(app_name), "App: " + app_name + " wasn't created."
 
 
