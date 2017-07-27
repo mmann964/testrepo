@@ -15,6 +15,7 @@ from locators import ManageColorsDialogLocators
 from locators import ManageFontsDialogLocators
 from locators import ManageImagesDialogLocators
 from locators import ManageStylesDialogLocators
+from locators import ManageDataDialogLocators
 from locators import LeftNavLocators
 from locators import NewScreenDialogLocators
 from locators import NewPanelDialogLocators
@@ -28,6 +29,9 @@ from locators import PublishContentDialogLocators
 from locators import StyleDialogLocators
 from locators import ButtonStyleDialogLocators
 from locators import RadioButtonStyleDialogLocators
+from locators import CopyAppDialogLocators
+from locators import CopyScreenDialogLocators
+from locators import CopyPanelDialogLocators
 import time
 #import locators
 
@@ -212,6 +216,15 @@ class WorkspacePage(BasePage):
             else:
                 delete_items_dialog.click_no_button()
 
+    def copyApp(self, app_name, new_app_name):
+        """Copies app with given name to new_app_name"""
+        copy_app_dialog = CopyAppDialog(self.driver)
+        self.selectApp(app_name)
+        self.click_object(*TopNavLocators.copy_icon)
+        time.sleep(1)
+        copy_app_dialog.copyApp(new_app_name)
+        time.sleep(1)
+
     def does_app_exist(self, app_name):
         """Returns true if app tile exists, false if it doesn't"""
         locatorStr = ('//*[@title="' + app_name + '"]')
@@ -263,6 +276,10 @@ class ManageImagesDialog(BaseDialog):
 class ManageStylesDialog(BaseDialog):
     expectedTitle = "Manage Styles"
     locatorClass = ManageStylesDialogLocators
+
+class ManageDataDialog(BaseDialog):
+    expectedTitle = "Manage Data"
+    locatorClass = ManageDataDialogLocators
 
 class NewApplicationDialog(BaseDialog):
     """ New Application dialog action methods go here """
@@ -332,6 +349,9 @@ class TopNav(BasePage):
     def click_styles_icon(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.styles_icon)
 
+    def click_data_icon(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.data_icon)
+
     def click_app_link(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.app_link)
 
@@ -364,6 +384,47 @@ class LeftNav(BasePage):
     def click_new_panel(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.New_Panel)
 
+class CopyAppDialog(BaseDialog):
+    """Copy App dialog action methods go here"""
+    expectedTitle = "Copy App"
+    locatorClass = CopyAppDialogLocators
+
+    #fields with user input
+    appname_field = TextElement(*locatorClass.name_field)
+
+    def copyApp(self, app_name):
+        """ Creates an app with the given name"""
+        self.appname_field = ""
+        self.appname_field = app_name
+        self.click_ok_button()
+
+class CopyPanelDialog(BaseDialog):
+    """Copy Panel dialog action methods go here"""
+    expectedTitle = "Copy Panel"
+    locatorClass = CopyPanelDialogLocators
+
+    #fields with user input
+    panelname_field = TextElement(*locatorClass.name_field)
+
+    def copyPanel(self, panel_name):
+        """ Creates a panel with the given name"""
+        self.panelname_field = ""
+        self.panelname_field = panel_name
+        self.click_ok_button()
+
+class CopyScreenDialog(BaseDialog):
+    """Copy Screen dialog action methods go here"""
+    expectedTitle = "Copy Screen"
+    locatorClass = CopyScreenDialogLocators
+
+    #fields with user input
+    screenname_field = TextElement(*locatorClass.name_field)
+
+    def copyScreen(self, screen_name):
+        """ Creates a screen with the given name"""
+        self.screenname_field = ""
+        self.screenname_field = screen_name
+        self.click_ok_button()
 
 class NewScreenDialog(BaseDialog):
     """New Screen dialog action methods go here"""
@@ -374,7 +435,7 @@ class NewScreenDialog(BaseDialog):
     screenname_field = TextElement(*locatorClass.name_field)
 
     def createScreen(self, screen_name):
-        """ Creates an app with the given name"""
+        """ Creates a screen with the given name"""
         self.screenname_field = screen_name
         self.click_ok_button()
 
@@ -428,9 +489,18 @@ class AppEditorPage(BasePage):
         """Deletes screen with given name"""
         delete_screens_dialog = DeleteScreensDialog(self.driver)
         self.selectScreen(screen_name)
-        self.click_object(*TopNavLocators.delete_icon)
+        self.click_object(*AppEditorPageLocators.delete_icon)
         time.sleep(1)
         delete_screens_dialog.click_ok_button(delete_screens_dialog.locatorClass)
+        time.sleep(1)
+
+    def copyScreen(self, screen_name, new_screen_name):
+        """Copies screen with given name to new_screen_name"""
+        copy_screen_dialog = CopyScreenDialog(self.driver)
+        self.selectScreen(screen_name)
+        self.click_object(*AppEditorPageLocators.copy_icon)
+        time.sleep(1)
+        copy_screen_dialog.copyScreen(new_screen_name)
         time.sleep(1)
 
     def does_screen_exist(self, screen_name):

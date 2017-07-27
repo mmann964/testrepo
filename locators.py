@@ -25,6 +25,11 @@ class WorkspacePageLocators(object):
 class AppEditorPageLocators(object):
     """A class for App Editor page locators."""
     #screen_dropdown = (By.XPATH, '//*[@class="collection__filter ng-binding"')
+
+    # Top Nav Delete and Copy icons
+    delete_icon = (By.XPATH, '//*[@title="Delete selected screen"]')
+    copy_icon = (By.XPATH, '//*[@title="Copy selected screen"]')
+
     def __init__(self, screen_name):
         # Screen tile -- assign name dynamically
         self.screen_tile = (By.XPATH, '//*[@title="' + screen_name + '"]/..//*[@class="screen-card__img"]')
@@ -67,6 +72,19 @@ class NewApplicationDialogLocators(DialogLocators):
     done_button = DialogLocators.ok_button
     next_button = DialogLocators.ok_button
     name_field = (By.ID, 'newapp-name')
+    # Device, Appearance "tabs"
+
+class CopyAppDialogLocators(DialogLocators):
+    """A class for the Copy App dialog locators"""
+    name_field = (By.XPATH, '//*[@title="Name of Copy:"]')
+
+class CopyScreenDialogLocators(DialogLocators):
+    """A class for the Copy Screen dialog locators"""
+    name_field = (By.XPATH, '//*[@title="Name of Copy:"]')
+
+class CopyPanelDialogLocators(DialogLocators):
+    """A class for the Copy Screen dialog locators"""
+    name_field = (By.XPATH, '//*[@title="Name of Copy:"]')
 
 class LeftNavLocators(object):
     """A class for Left Navigation locators"""
@@ -89,11 +107,13 @@ class TopNavLocators(object):
     text_icon = (By.XPATH, '//*[@class="icon icon-Text"]')
     #delete_icon = (By.XPATH, '//*[@class="icon icon-Delete"]')
     delete_icon = (By.XPATH, '//*[@title="Delete selected app"]')
+    copy_icon = (By.XPATH, '//*[@title="Copy selected app"]')
     colors_icon = (By.XPATH, '//*[@title="Manage colors"]')
     #fonts_icon = (By.XPATH, '//*[@class="icon icon-Fonts"]')
     fonts_icon = (By.XPATH, '//*[@title="Manage Fonts"]')
     images_icon = (By.XPATH, '//*[@title="Manage Images"]')
     styles_icon = (By.XPATH, '//*[@title="Manage Styles"]')
+    data_icon = (By.XPATH, '//*[@title="Manage Data"]')
     search_box = (By.XPATH, '//*[@title="Find"]')
     user_menu_dropdown = (By.XPATH, "//span[3]/bldr-user-dropdown")
     logout_menu = (By.XPATH, "//*[contains(text(), 'Logout')]")
@@ -128,6 +148,10 @@ class ManageImagesDialogLocators(DialogLocators):
 class ManageStylesDialogLocators(DialogLocators):
     """A class for Manage Styles dialog locators"""
     # Still need Delete, Individual images buttons
+
+class ManageDataDialogLocators(DialogLocators):
+    """A class for Manage Data dialog locators"""
+    # Still need Data Sources, Request Parameters, Variables, add tiles, etc.
 
 class NewScreenDialogLocators(DialogLocators):
     """A class for the New Screen dialog locators"""

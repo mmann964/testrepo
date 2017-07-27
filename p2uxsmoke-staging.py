@@ -26,6 +26,7 @@ print "uname: " + uname
 print "passwordEnc: " + passwordEnc
 passwordDec = base64.b64decode(passwordEnc)
 app_name = "SeleniumSmokeTest"
+app_name_copy = "SeleniumSmokeTestCopy"
 screen_name = "SeleniumTestScreen"
 panel_name = "SeleniumTestPanel"
 
@@ -244,6 +245,47 @@ class P2uxSmokeTest(unittest.TestCase):
     def test_06_copy_screen(self):
         """Check that you can copy a screen"""
 
+        top_nav = page.TopNav(self.driver)
+        workspace_page = page.WorkspacePage(self.driver)
+        app_editor = page.AppEditorPage(self.driver)
+
+        tScreenNameCopy = "SeleniumTestScreenCopy"
+
+        workspace_page.openApp(app_name)
+        app_editor.copyScreen(screen_name, tScreenNameCopy)
+
+        # Verify that the new screen exists
+        top_nav.click_MyApps_link()
+        workspace_page.openApp(app_name)
+        assert app_editor.does_screen_exist(tScreenNameCopy), "Screen: " + tScreenNameCopy + " wasn't created."
+
+        top_nav.click_MyApps_link()
+
+    def test_07_copy_app(self):
+        """Check that you can copy an app"""
+
+        top_nav = page.TopNav(self.driver)
+        workspace_page = page.WorkspacePage(self.driver)
+        app_editor = page.AppEditorPage(self.driver)
+
+        top_nav.click_MyApps_link()
+        workspace_page.copyApp(app_name, app_name_copy)
+
+        # Verify that the new app exists
+        top_nav.click_MyApps_link()
+        assert workspace_page.does_app_exist(app_name_copy), "App: " + app_name_copy + " wasn't created."
+
+        # Verify that you can open the new app
+        workspace_page.openApp(app_name_copy)
+
+        # Verify that the screen we created is there
+        app_editor.does_screen_exist(screen_name)
+
+        # Delete the app
+        top_nav.click_MyApps_link()
+        workspace_page.deleteApp(app_name_copy)
+
+
     def tearDown(self):
         time.sleep(2)  # without this, it may attribute the browser error to the wrong test case
         browserErrors = check_browser_errors(self.driver)
@@ -261,7 +303,7 @@ class P2uxSmokeTest(unittest.TestCase):
         if browserType == "3":
             time.sleep(.5)
         workspace_page = page.WorkspacePage(cls.driver)
-        #top_nav = page.TopNav(cls.driver)
+        top_nav = page.TopNav(cls.driver)
         #top_nav.search_field = ""
         #cls.driver.refresh()
         #if browserType == "3":
@@ -271,7 +313,14 @@ class P2uxSmokeTest(unittest.TestCase):
 
 
         #delete the app for now -- remove/move this as we start to add tests
-        workspace_page.deleteApp(app_name)
+        top_nav.click_MyApps_link()
+
+        if (workspace_page.does_app_exist(app_name) == True):
+            workspace_page.deleteApp(app_name)
+
+        if (workspace_page.does_app_exist(app_name_copy) == True):
+            workspace_page.deleteApp(app_name_copy)
+
 
         cls.driver.quit()
 
