@@ -24,6 +24,7 @@ from locators import AppEditorPageLocators
 from locators import ScreenEditorPageLocators
 from locators import ComponentPaletteLocators
 from locators import SizeAndPositionPaletteLocators
+from locators import DefaultPropertiesPaletteLocators
 from locators import ToolTipDialog
 from locators import PublishContentDialogLocators
 from locators import StyleDialogLocators
@@ -32,6 +33,7 @@ from locators import RadioButtonStyleDialogLocators
 from locators import CopyAppDialogLocators
 from locators import CopyScreenDialogLocators
 from locators import CopyPanelDialogLocators
+from locators import ColorPickerLocators
 import time
 #import locators
 
@@ -60,6 +62,7 @@ class BasePage(object):
 
     def check_object_exists(self, *locator):
         """returns true of the object exists, false if it doesn't"""
+        time.sleep(1) #give it time to load the object
         try:
             #lambda driver: self.driver.find_element(*locator)
             self.driver.find_element(*locator)
@@ -569,6 +572,15 @@ class ScreenEditorPage(BasePage):
     #def add_page_indicator_control(self, locatorClass=locatorClass):
     #    self.click_object(*locatorClass.PageIndicatorControl)
 
+    def does_component_exist(self, component_name):
+        """Returns true if component exists, false if it doesn't"""
+        time.sleep(1)
+        component_tiles = ScreenEditorPageLocators(component_name)
+        if self.check_object_exists(*component_tiles.component_name_tile):
+            return True
+        else:
+            return False
+
     def selectComponent(self, component_name):
         """Selects the component with given name"""
         time.sleep(1)  #this is a hack.  Otherwise it won't find the app consistently.  Need to double-check implicit/explicit waits
@@ -633,6 +645,13 @@ class ComponentPalette(BasePage):
 
     def click_add_style(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.add_style)
+
+class DefaultPropertiesPalette(BasePage):
+    """Default Properties Palette actions go here"""
+    locatorClass = DefaultPropertiesPaletteLocators
+
+    def clickFillColorSwatch(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.FillColorSwatch)
 
 class PublishContentDialog(BaseDialog):
     """Publish Content Dialog action methods go here"""
@@ -762,5 +781,14 @@ class RadioButtonStyleDialog(ButtonStyleDialog):
     def setShape(self, checked = True, locatorClass=locatorClass):
         element = self.driver.find_element(*locatorClass.shape_chkbox)
         self.setItem(checked, element)
+
+
+class ColorPickerDialog(BaseDialog):
+    """Color Picker Dialog methods go here"""
+    locatorClass = ColorPickerLocators
+
+    def click_close_button(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.close_button)
+
 
 

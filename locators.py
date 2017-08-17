@@ -179,6 +179,10 @@ class SizeAndPositionPaletteLocators(object):
     width = (By.XPATH, '//input[@title="W"]')
     height = (By.XPATH, '//input[@title="H"]')
 
+class DefaultPropertiesPaletteLocators(object):
+    """A class for Default Properties Palette locators """
+    FillColorSwatch = (By.XPATH, '//*[@class="btn--square  "]')
+
 class ToolTipDialog(object):
     """A class for ToolTip Dialog locators"""
     gotIt_btn = (By.XPATH, '//*[@class="tooltip_nav-btn ng-binding ng-scope"]') # Also applies to Next tooltip button
@@ -238,3 +242,37 @@ class ImageStyleDialogLocators(StyleDialogLocators):
     tap_through_chkbox = (By.ID, 'attr_1_Tap Through')
     scale_chkbox = (By.ID, 'attr_0_Scale')
     image_chkbox = (By.ID, 'attr_1_Image')
+
+class ColorPickerLocators(DialogLocators):
+    """Locators for Color Picker"""
+    close_button = (By.XPATH, '//*[@class="icon-Cancel wnd-top__cancel"]')
+    # Color/Gradients
+
+
+    # Hex, R, G, B, A
+    hexVal = (By.XPATH, '//input[@title="HEX"]')
+    RVal = (By.XPATH, '//input[@title="R"]')
+    GVal = (By.XPATH, '//input[@title="G"]')
+    BVal = (By.XPATH, '//input[@title="B"]')
+    #AVal = (By.XPATH, '//input[@title="A"]')
+
+    # Big Color Swatch
+    bigSwatch = (By.XPATH, '//*[@class="btn--square btn--square lg "]')
+
+    # Color Name?
+
+
+    # Palette settings
+
+    # Palette Tiles
+
+    # Update
+    Update = (By.ID, 'color_picker_update')
+
+    # Add new color/ new color name
+    AddNewColor = (By.XPATH, '//*[@class="icon icon-Add"]')
+    NewColorName = (By.XPATH, '//input[@type="text"]')
+
+    # Gradient style dropdown/choices
+
+    # Gradient direction dropdown/choices
