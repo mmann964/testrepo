@@ -10,6 +10,7 @@ from locators import LoginPageLocators
 from locators import WorkspacePageLocators
 from locators import NewApplicationDialogLocators
 from locators import TopNavLocators
+from locators import RemoveAppsDialogLocators
 from locators import DeleteItemsDialogLocator
 from locators import ManageColorsDialogLocators
 from locators import ManageFontsDialogLocators
@@ -123,6 +124,16 @@ class BasePage(object):
         actionChains = ActionChains(self.driver)
         actionChains.move_to_element_with_offset(element, xoffset, yoffset).click().perform()
 
+    def setChkBox(self, checked, *locator):
+        """checks or unchecks a checkbox"""
+        element = self.driver.find_element(*locator)
+        if (element.get_attribute('checked')):  # if it's checked, only check it if checked is False
+            if checked == False:
+                element.click()
+        else:  # if it's not checked, only check it if checked is True
+            if checked == True:
+                element.click()
+
 
 class BaseDialog(BasePage):
     """Bass class to initialize basic dialog functionality"""
@@ -209,15 +220,13 @@ class WorkspacePage(BasePage):
 
     def deleteApp(self, app_name, permDelete = True):
         """Deletes app with given name"""
-        delete_items_dialog = DeleteItemsDialog(self.driver)
+        remove_apps_dialog = RemoveAppsDialogLocators()
         self.selectApp(app_name)
         self.click_object(*TopNavLocators.delete_icon)
-        # deal with permanently delete dialog if it comes up
-        if (self.check_object_exists(*DeleteItemsDialogLocator.title_bar)):
-            if (permDelete == True):
-                delete_items_dialog.click_yes_button()
-            else:
-                delete_items_dialog.click_no_button()
+
+        if (self.check_object_exists(*RemoveAppsDialogLocators.title_bar)):
+            self.setChkBox(permDelete, *RemoveAppsDialogLocators.permDelete_chkbox)
+            self.click_object(*RemoveAppsDialogLocators.yes_button)
 
     def copyApp(self, app_name, new_app_name):
         """Copies app with given name to new_app_name"""

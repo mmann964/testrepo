@@ -124,7 +124,11 @@ class TopNavLocators(object):
         #self.app_link = (By.XPATH, '//*[@class="ng-scope ng-isolate-scope"]/[contains(text(), ' + app_name + ')]')
         #self.app_link = (By.XPATH, '//*[contains(text(), "' + app_name + '")]')
 
-
+class RemoveAppsDialogLocators(DialogLocators):
+    """A class for Remove Apps dialog locators"""
+    permDelete_chkbox = (By.ID, "sm_checkbox_0")
+    no_button = DialogLocators.ok_button      # No is the default button in this dialog
+    yes_button = (By.XPATH, '//button[2]')  # It's the second button.
 
 class DeleteItemsDialogLocator(DialogLocators):
     """A class for Delete Items dialog locators"""
