@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <head>
+    <title>Published JSON</title>
+    <style>
+      label
+      {
+        width: 70px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+
+    <script>
+      var app = angular.module('MyApp', [])
+      app.controller('MyController', function ($scope) {
+        $scope.svrStr = 'https://beta.p2ux.com/build/';
+        $scope.devStr = '0';
+        $scope.platStr = '0';
+        $scope.linkStr = function() {
+            return  $scope.svrStr + $scope.appID + '/dev/' + $scope.devStr + '/plat/' + $scope.platStr + '/ver/1?p2uxver=1.0.0&appver=1.0.0';
+        };
+      });
+    </script>
+
+
+    <div ng-app="MyApp" ng-controller="MyController">
+      <h2>Get an app's published json</h2>
+
+      <p>
+      <label for="appID">AppID:</label>
+      <input id="appID" type="text" size="30" ng-model="appID">
+      </p>
+
+      <p>
+      <label for="svrAddr">Server:</label>
+      <input id="svrAddr" type="text" size="30" ng-model="svrStr">
+      </p>
+
+      <p>
+      <label for="devType">Device:</label>
+      <select id="devType" name="devType" ng-model="devStr">
+        <option value="0">0 - Phone</option>
+        <option value="1">1 - Tablet</option>
+        <option value="4">4 - TV</option>
+      </select>
+      </p>
+
+      <p>
+      <label for="platType">Platform:</label>
+      <select id="platType" name="platType" ng-model="platStr">
+        <option value="0">0 - iOS</option>
+        <option value="1">1 - Android</option>
+      </select>
+      </p>
+
+      <br>
+      <p>Link: <a ng-href="{{linkStr()}}" target="_blank">{{linkStr()}}</a></p>
+
+    </div>
+
+  </body>
+</html>
