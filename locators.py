@@ -139,6 +139,16 @@ class ManageColorsDialogLocators(DialogLocators):
     """A class for Manage Colors dialog locators"""
     # Still need Color, Gradient, +, Individual colors buttons
     done_button = DialogLocators.ok_button
+    add_color_tile = (By.XPATH, "//*[@ng-if='vm.addButton']")  # Tile with + to add a color
+
+    def __init__(self, color_name): # ignore these -they aren't setup yet
+        # Color tile items -- assign name dynamically
+        self.color_swatch = (By.XPATH, '//*[@title="' + color_name + '"]')
+        self.color_delete = (By.XPATH, '//*[@title="' + color_name + '"]')
+        self.color_name = (By.XPATH, '//*[@title="' + color_name + '"]')
+        #self.component_lock_button = (
+        # (By.XPATH, "//*[contains(text(), '" + component_name + "')]/../*[@title='Lock component']")
+
 
 class ManageFontsDialogLocators(DialogLocators):
     """A class for Manage Fonts dialog locators"""
@@ -258,7 +268,7 @@ class ColorPickerLocators(DialogLocators):
     RVal = (By.XPATH, '//input[@title="R"]')
     GVal = (By.XPATH, '//input[@title="G"]')
     BVal = (By.XPATH, '//input[@title="B"]')
-    #AVal = (By.XPATH, '//input[@title="A"]')
+    #AVal = (By.XPATH, '//input[@title="A"]')  # no title for object in source code
 
     # Big Color Swatch
     bigSwatch = (By.XPATH, '//*[@class="btn--square btn--square lg "]')
@@ -274,8 +284,9 @@ class ColorPickerLocators(DialogLocators):
     Update = (By.ID, 'color_picker_update')
 
     # Add new color/ new color name
-    AddNewColor = (By.XPATH, '//*[@class="icon icon-Add"]')
-    NewColorName = (By.XPATH, '//input[@type="text"]')
+    #AddNewColor = (By.XPATH, '//*[@class="icon icon-Add"]')
+    AddNewColor = (By.ID, 'color_picker_add')
+    NewColorName = (By.XPATH, '//input[@placeholder="New Color"]')
 
     # Gradient style dropdown/choices
 

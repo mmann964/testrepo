@@ -77,34 +77,45 @@ class P2uxSmokeTest(unittest.TestCase):
         if browserType == "3":
             time.sleep(.5)
 
+        # login
+        login_page = page.LoginPage(self.driver)
+        login_page.login(uname, passwordDec)
+
+
     #@unittest.skip("skipping for now.")
     def test_00_misc(self):
-        """Verify you can login with valid credentials"""
-        #app_name = "MelSelenium"
-
-        login_page = page.LoginPage(self.driver)
-        top_nav = page.TopNav(self.driver)
+        '''open app, open screen, select button, open color picker'''
         workspace_page = page.WorkspacePage(self.driver)
-        newapp_dialog = page.NewApplicationDialog(self.driver)
+        app_editor = page.AppEditorPage(self.driver)
+        screen_editor = page.ScreenEditorPage(self.driver)
+        default_prop_palette = page.DefaultPropertiesPalette(self.driver)
+        color_picker = page.ColorPickerDialog(self.driver)
 
-        #login
-        assert login_page.does_title_match(), "Login Screen title doesn't match."
-        verStr = login_page.get_version()
-        print "\nVersion = " + verStr
-        login_page.login(uname, passwordDec)
-        assert workspace_page.does_title_match(), "Not in Workspace Page after logging in."
-        time.sleep(2)
-
-        # let's try highlighting the Yes button in the Remove App dialog
         app_name = "MelSeleniumSmokeTest"
-        if (workspace_page.does_app_exist(app_name) == True):
-            workspace_page.deleteApp(app_name)
+        screen_name = "Experiment"
+        component_name = "button-1"
 
-        ## create an app
-        #workspace_page.click_add_app_tile()
-        #assert newapp_dialog.does_title_match(), "Not in New Application dialog."
-        #newapp_dialog.createApp(app_name)
-        #time.sleep(2)
+        workspace_page.openApp(app_name)
+        app_editor.openScreen(screen_name)
+        screen_editor.selectComponent(component_name)
+        default_prop_palette.clickFillColorSwatch()
+        # x = color_picker.hex_field
+        #color_picker.hex_field = ""
+        #color_picker.hex_field = "#66e8bdff"
+        # color_picker.highlightFields()
+        # Add a new color
+        color_picker.add_color("#ff0019ff", "Yellow")
+        color_picker.click_close_button()
+
+        screen_editor.selectComponent("text-1")
+
+        screen_editor.selectComponent(component_name)
+        default_prop_palette.clickFillColorSwatch()
+        color_picker.update_color("#ffff19ff")
+        color_picker.click_close_button()
+
+
+
 
     @unittest.skip("skipping for now.")
     def test_misc(self):
@@ -331,14 +342,6 @@ class P2uxSmokeTest(unittest.TestCase):
 
         #delete the app for now -- remove/move this as we start to add tests
         top_nav.click_MyApps_link()
-
-        if (workspace_page.does_app_exist(app_name) == True):
-            workspace_page.deleteApp(app_name)
-
-        if (workspace_page.does_app_exist(app_name_copy) == True):
-            workspace_page.deleteApp(app_name_copy)
-
-
         cls.driver.quit()
 
 

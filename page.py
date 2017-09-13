@@ -795,9 +795,43 @@ class RadioButtonStyleDialog(ButtonStyleDialog):
 class ColorPickerDialog(BaseDialog):
     """Color Picker Dialog methods go here"""
     locatorClass = ColorPickerLocators
+    expectedTitle = "Color Picker"
+
+    # fields with user input
+    hex_field = TextElement(*ColorPickerLocators.hexVal)
+    name_field = TextElement(*ColorPickerLocators.NewColorName)
+
+    def highlightFields(self, locatorClass=locatorClass):
+        self.click_add_color()
+        self.highlight(*locatorClass.NewColorName)
+        #self.highlight(*locatorClass.AddNewColor)
+        # self.highlight(*locatorClass.hexVal)
+        # self.highlight(*locatorClass.bigSwatch) #works if swatch isn't split
+        # self.highlight(*locatorClass.RVal)
+        # self.highlight(*locatorClass.GVal)
+        # self.highlight(*locatorClass.BVal)
+        # self.highlight(*locatorClass.Update)
 
     def click_close_button(self, locatorClass=locatorClass):
         self.click_object(*locatorClass.close_button)
+
+    def click_add_color(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.AddNewColor)
+
+    def click_update(self, locatorClass=locatorClass):
+        self.click_object(*locatorClass.Update)
+
+    def add_color(self, colorHexVal, colorName):
+        self.hex_field = ""
+        self.hex_field = colorHexVal
+        self.click_add_color()
+        self.name_field = colorName
+
+    def update_color(self, colorHexVal):
+        """Updates currently selected color in color picker to specified hex value"""
+        self.hex_field = ""
+        self.hex_field = colorHexVal
+        self.click_update()
 
 
 
