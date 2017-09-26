@@ -77,46 +77,6 @@ class P2uxSmokeTest(unittest.TestCase):
         if browserType == "3":
             time.sleep(.5)
 
-    @unittest.skip("skipping for now.")
-    def test_00_misc(self):
-        """Verify you can login with valid credentials"""
-        #app_name = "MelSelenium"
-
-        login_page = page.LoginPage(self.driver)
-        top_nav = page.TopNav(self.driver)
-        workspace_page = page.WorkspacePage(self.driver)
-        newapp_dialog = page.NewApplicationDialog(self.driver)
-
-        assert login_page.does_title_match(), "Login Screen title doesn't match."
-        verStr = login_page.get_version()
-        print "\nVersion = " + verStr
-
-        login_page.login(uname, passwordDec)
-        assert workspace_page.does_title_match(), "Not in Workspace Page after logging in."
-        time.sleep(2)
-
-        #top_nav.logout()  #I can't get the logout menu to work to save my life :-/
-        #time.sleep(5)
-        #assert login_page.is_title_matches(), "Login Screen title doesn't match."
-        #exit()
-
-        workspace_page.click_add_app_tile()
-        assert newapp_dialog.does_title_match(), "Not in New Application dialog."
-        newapp_dialog.createApp(app_name)
-
-        time.sleep(2)
-        workspace_page.openApp(app_name)
-        time.sleep(2)
-        top_nav.click_MyApps_link()
-        workspace_page.deleteApp(app_name)
-        time.sleep(2)
-        #workspace_page.deleteApp("defaults", False)
-        # newapp_dialog.click_close_button()  #this is an example of deleting an app without the permanently delete confirmation
-
-        #top_nav.logout()
-        #time.sleep(2)
-
-
     def test_01_login(self):
         """Check that you can login with valid credentials"""
         login_page = page.LoginPage(self.driver)

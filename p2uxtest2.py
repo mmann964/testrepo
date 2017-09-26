@@ -86,33 +86,23 @@ class P2uxSmokeTest(unittest.TestCase):
     def test_00_misc(self):
         '''open app, open screen, select button, open color picker'''
         workspace_page = page.WorkspacePage(self.driver)
+        left_nav = page.LeftNav(self.driver)
+        new_panel_dlg = page.NewPanelDialog(self.driver)
         app_editor = page.AppEditorPage(self.driver)
         screen_editor = page.ScreenEditorPage(self.driver)
         default_prop_palette = page.DefaultPropertiesPalette(self.driver)
         color_picker = page.ColorPickerDialog(self.driver)
 
         app_name = "MelSeleniumSmokeTest"
+        panel_name = "Test Panel"
         screen_name = "Experiment"
         component_name = "button-1"
 
         workspace_page.openApp(app_name)
-        app_editor.openScreen(screen_name)
-        screen_editor.selectComponent(component_name)
-        default_prop_palette.clickFillColorSwatch()
-        # x = color_picker.hex_field
-        #color_picker.hex_field = ""
-        #color_picker.hex_field = "#66e8bdff"
-        # color_picker.highlightFields()
-        # Add a new color
-        color_picker.add_color("#ff0019ff", "Yellow")
-        color_picker.click_close_button()
+        left_nav.click_new_panel()
+        new_panel_dlg.createPanel(panel_name)
+        screen_editor.add_button_control()
 
-        screen_editor.selectComponent("text-1")
-
-        screen_editor.selectComponent(component_name)
-        default_prop_palette.clickFillColorSwatch()
-        color_picker.update_color("#ffff19ff")
-        color_picker.click_close_button()
 
 
 
