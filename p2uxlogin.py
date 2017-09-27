@@ -44,6 +44,7 @@ class P2uxLoginTest(unittest.TestCase):
         cls.driver.implicitly_wait(3)
         cls.driver.get(url)
 
+    @unittest.skip("skipping for now.")
     def test_00_misc(self):
         """Go to login screen, login, create new app"""
         app_name = "MelSelenium"
@@ -53,13 +54,13 @@ class P2uxLoginTest(unittest.TestCase):
         workspace_page = page.WorkspacePage(self.driver)
         newapp_dialog = page.NewApplicationDialog(self.driver)
 
-        assert login_page.is_title_matches(), "Login Screen title doesn't match."
+        assert login_page.does_title_match(), "Login Screen title doesn't match."
         verStr = login_page.get_version()
         print "Version = " + verStr
 
         time.sleep(2)
         login_page.login(uname, passwordDec)
-        assert workspace_page.is_title_matches, "Not in Workspace Page after logging in."
+        assert workspace_page.does_title_match(), "Not in Workspace Page after logging in."
         time.sleep(2)
 
         #top_nav.logout()  #I can't get the logout menu to work to save my life :-/
@@ -68,7 +69,7 @@ class P2uxLoginTest(unittest.TestCase):
         #exit()
 
         workspace_page.click_add_app_tile()
-        assert newapp_dialog.is_title_matches(), "Not in New Application dialog."
+        assert newapp_dialog.does_title_match(), "Not in New Application dialog."
         newapp_dialog.createApp(app_name)
 
         time.sleep(2)
@@ -83,13 +84,13 @@ class P2uxLoginTest(unittest.TestCase):
         #top_nav.logout()
         #time.sleep(2)
 
-    @unittest.skip("skipping for now.")
+    # @unittest.skip("skipping for now.")
     def test_01_test_title(self):
         """Check title of login screen"""
         login_page = page.LoginPage(self.driver)
-        assert login_page.is_title_matches(), "Login Screen title doesn't match."
+        assert login_page.does_title_match(), "Login Screen title doesn't match."
 
-    @unittest.skip("skipping for now.")
+    # @unittest.skip("skipping for now.")
     def test_02_test_valid_login(self):
         """Check that you can login"""
         login_page = page.LoginPage(self.driver)
@@ -106,7 +107,7 @@ class P2uxLoginTest(unittest.TestCase):
         print "User name = " + uname2
         # time.sleep(2)
         login_page.click_sign_in_button()
-        assert workspace_page.is_title_matches, "Not in Workspace Page after logging in."
+        assert workspace_page.does_title_match(), "Not in Workspace Page after logging in."
         workspace_page.click_add_app_tile()
         newapp_dialog.click_close_button()
         time.sleep(2)
