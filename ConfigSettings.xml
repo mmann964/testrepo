@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <data>
     <browserType>1</browserType> <!-- 1 = Chrome 2 = Firefox 3 = Safari -->
+    <headless>0</headless>  <!-- 0 = don't run headless, 1 = run headless -->
     <url>https://medusa.p2ux.com</url>
     <uname>jenkins@phase2industries.com</uname>
     <passwordEnc>dGVzdDEyMw==</passwordEnc>
@@ -9,6 +10,7 @@
 <!-- Another user's data
 <data>
     <browserType>1</browserType>
+    <headless>0</headless>
     <url>https://beta.p2ux.com</url>
     <uname>melissa</uname>
     <passwordEnc>TWlrcm8yMDE2</passwordEnc>

@@ -1,76 +1,24 @@
 import time
 import unittest
 import base64
-import xml.etree.ElementTree as ET
-from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.common.keys import Keys
-import logging
 import page
+import p2uxGeneral
 
 # to run, type one of these commands at the bash prompt:
 # python p2uxsmoke.py
 # nosetests --nocapture p2uxlogin.py
 # nosetests --verbosity=3 --nocapture p2uxlogin.py
 
-tree = ET.parse('ConfigSettings.xml')
-root = tree.getroot()
-browserType = root.find('browserType').text
-url = root.find('url').text
-uname = root.find('uname').text
-passwordEnc = root.find('passwordEnc').text
-
-print "browserType: " + browserType
-print "url: " + url
-print "uname: " + uname
-print "passwordEnc: " + passwordEnc
+browserType = p2uxGeneral.browserType
+uname = p2uxGeneral.uname
+passwordEnc = p2uxGeneral.passwordEnc
 passwordDec = base64.b64decode(passwordEnc)
 app_name = "SeleniumSmokeTest"
 app_name_copy = "SeleniumSmokeTestCopy"
 screen_name = "SeleniumTestScreen"
 panel_name = "SeleniumTestPanel"
 
-def check_browser_errors(driver):
-    """
-    Checks browser for errors, returns a list of errors
-    :param driver:
-    :return:
-    """
-    try:
-        browserlogs = driver.get_log('browser')
-    except (ValueError, WebDriverException) as e:
-        # Some browsers does not support getting logs
-        logging.debug("Could not get browser logs for driver %s due to exception: %s",
-                     driver, e)
-        return []
-
-    errors = []
-    for entry in browserlogs:
-        if entry['level'] == 'SEVERE':
-            errors.append(entry)
-    return errors
-
-
-class P2uxSmokeTest(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        if browserType == "1":
-            print "Browser = Chrome"
-            cls.driver = webdriver.Chrome()
-        elif browserType == "2":
-            print "Browser = Firefox"
-            fp = webdriver.FirefoxProfile()
-            fp.set_preference('webdriver_enable_native_events', True)
-            cls.driver = webdriver.Firefox(firefox_profile=fp)
-        elif browserType == "3":
-            print "Browser = Safari"
-            cls.driver = webdriver.Safari()
-            # cls.driver.maximize_window()
-        else:
-            print "Invalid entry for browser.  Exiting."
-            exit()
-        cls.driver.implicitly_wait(3)
-        cls.driver.get(url)
+class P2uxSmokeTest(p2uxGeneral.P2uxBaseTest):
 
     def setUp(self):
         # hack -- waiting allows Safari to load the javascript so we can do a click
@@ -102,10 +50,6 @@ class P2uxSmokeTest(unittest.TestCase):
         left_nav.click_new_panel()
         new_panel_dlg.createPanel(panel_name)
         screen_editor.add_button_control()
-
-
-
-
 
     @unittest.skip("skipping for now.")
     def test_misc(self):
@@ -302,37 +246,6 @@ class P2uxSmokeTest(unittest.TestCase):
         # Delete the app
         top_nav.click_MyApps_link()
         workspace_page.deleteApp(app_name_copy)
-
-
-    def tearDown(self):
-        time.sleep(2)  # without this, it may attribute the browser error to the wrong test case
-        browserErrors = check_browser_errors(self.driver)
-
-        if browserErrors:
-            print "\n*****************************"
-            print self.id() + " browser errors:"
-            print browserErrors
-            print "*****************************"
-            self.fail("Browser Errors reported in " + self.id())
-
-
-    @classmethod
-    def tearDownClass(cls):
-        if browserType == "3":
-            time.sleep(.5)
-        workspace_page = page.WorkspacePage(cls.driver)
-        top_nav = page.TopNav(cls.driver)
-        #top_nav.search_field = ""
-        #cls.driver.refresh()
-        #if browserType == "3":
-        #    time.sleep(5)
-        #    workspace_page = page.WorkspacePage(cls.driver)
-        #    top_nav = page.TopNav(cls.driver)
-
-
-        #delete the app for now -- remove/move this as we start to add tests
-        top_nav.click_MyApps_link()
-        cls.driver.quit()
 
 
 if __name__ == "__main__":

@@ -1,49 +1,20 @@
 import time
 import unittest
 import base64
-import xml.etree.ElementTree as ET
-from selenium import webdriver
 import page
+import p2uxGeneral
 
 # to run, type one of these commands at the bash prompt:
 # python p2uxlogin.py
 # nosetests --nocapture p2uxlogin.py
 # nosetests --verbosity=3 --nocapture p2uxlogin.py
 
-tree = ET.parse('ConfigSettings.xml')
-root = tree.getroot()
-browserType = root.find('browserType').text
-url = root.find('url').text
-uname = root.find('uname').text
-passwordEnc = root.find('passwordEnc').text
-
-print "browserType: " + browserType
-print "url: " + url
-print "uname: " + uname
-print "passwordEnc: " + passwordEnc
+uname = p2uxGeneral.uname
+passwordEnc = p2uxGeneral.passwordEnc
 passwordDec = base64.b64decode(passwordEnc)
 
 
-class P2uxLoginTest(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        if browserType == "1":
-            print "Browser = Chrome"
-            cls.driver = webdriver.Chrome()
-        elif browserType == "2":
-            print "Browser = Firefox"
-            fp = webdriver.FirefoxProfile()
-            fp.set_preference('webdriver_enable_native_events', True)
-            cls.driver = webdriver.Firefox(firefox_profile=fp)
-        elif browserType == "3":
-            print "Browser = Safari"
-            cls.driver = webdriver.Safari()
-        else:
-            print "Invalid entry for browser.  Exiting."
-            exit()
-        cls.driver.implicitly_wait(3)
-        cls.driver.get(url)
-
+class P2uxLoginTest(p2uxGeneral.P2uxBaseTest):
     @unittest.skip("skipping for now.")
     def test_00_misc(self):
         """Go to login screen, login, create new app"""
@@ -127,10 +98,6 @@ class P2uxLoginTest(unittest.TestCase):
 
         workspace_page.click_add_app_tile()
         time.sleep(5)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
 
 
 if __name__ == "__main__":
