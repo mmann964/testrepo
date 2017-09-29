@@ -825,6 +825,7 @@ class ColorPickerDialog(BaseDialog):
         self.hex_field = ""
         self.hex_field = colorHexVal
         self.click_add_color()
+        time.sleep(1)
         self.name_field = colorName
 
     def update_color(self, colorHexVal):
