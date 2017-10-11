@@ -203,6 +203,12 @@ class WorkspacePage(BasePage):
 
     # define the show dropdown
 
+    def createApp(self, app_name):
+        new_app_dialog = NewApplicationDialog(self.driver)
+
+        self.click_add_app_tile()
+        new_app_dialog.createApp(app_name)
+
     def openApp(self, app_name):
         """Double clicks on app with given name"""
         time.sleep(2)
@@ -239,6 +245,14 @@ class WorkspacePage(BasePage):
 
     def does_app_exist(self, app_name):
         """Returns true if app tile exists, false if it doesn't"""
+        # better make sure we're in the workspace before checking for the app
+        ctr = 0
+        while ctr < 100:
+            if self.check_object_exists(*WorkspacePageLocators.add_app_tile):
+                break
+            else:
+                ctr += 1
+
         locatorStr = ('//*[@title="' + app_name + '"]')
         if self.check_object_exists(By.XPATH, locatorStr):
             return True
